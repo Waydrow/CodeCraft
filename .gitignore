@@ -22,12 +22,3 @@
 *.la
 *.a
 *.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# build file
-/bin/*
-/build/*
