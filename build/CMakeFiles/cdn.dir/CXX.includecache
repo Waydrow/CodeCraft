@@ -49,14 +49,22 @@ map
 -
 utility
 -
+queue
+-
 population.h
 /mnt/hgfs/codecraft/SDK-gcc/cdn/population.h
+normal.h
+/mnt/hgfs/codecraft/SDK-gcc/cdn/normal.h
+dinic_cost.h
+/mnt/hgfs/codecraft/SDK-gcc/cdn/dinic_cost.h
 
 /mnt/hgfs/codecraft/SDK-gcc/cdn/deploy.h
 lib_io.h
 /mnt/hgfs/codecraft/SDK-gcc/cdn/lib_io.h
 bitset
 -
+
+/mnt/hgfs/codecraft/SDK-gcc/cdn/dinic_cost.h
 
 /mnt/hgfs/codecraft/SDK-gcc/cdn/io.cpp
 stdio.h
@@ -81,6 +89,8 @@ signal.h
 /mnt/hgfs/codecraft/SDK-gcc/cdn/lib/lib_io.h
 
 /mnt/hgfs/codecraft/SDK-gcc/cdn/lib/lib_time.h
+
+/mnt/hgfs/codecraft/SDK-gcc/cdn/normal.h
 
 /mnt/hgfs/codecraft/SDK-gcc/cdn/population.h
 lib/lib_time.h

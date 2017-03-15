@@ -3,7 +3,7 @@
 #include <cmath>
 
 #define MAX_NODES_NUM 1000 // 最大网络节点数量
-#define POP_SCALE 80  // 种群规模
+#define POP_SCALE 70  // 种群规模
 
 #define MAX_GENERATION 200 // 迭代次数
 
@@ -91,8 +91,6 @@ public:
 
     // 随机选取第一代
     void generateInitalPopulation() {
-        // 以当前时间为种子
-        //srand((unsigned)time(NULL));
         int i = 0;
         while (i < POP_SCALE) { // 每个体
             // 随机产生服务器的个数
@@ -154,7 +152,7 @@ public:
         */
         for (int i = 0; i < POP_SCALE; i++) {
             temp = ((c - 1) * averageFit * inVec[i].fitness) / (maxFit - averageFit)
-                + ((maxFit - c * averageFit) * averageFit) / (maxFit - averageFit);
+                   + ((maxFit - c * averageFit) * averageFit) / (maxFit - averageFit);
             if (temp < 0)temp = 0;
             inVec[i].fitness = temp;
         }
@@ -174,14 +172,20 @@ public:
     // find best and worst individual of this generation
     void findBestAndWorstIndividual() {
 
-        vector<Individual>::iterator it;
-        it = max_element(inVec.begin(), inVec.end(), compByCost);
-        worstIndividual = *it;
-        worstIndex = distance(inVec.begin(), it);
-
-        it = min_element(inVec.begin(), inVec.end(), compByCost);
-        bestIndividual = *it;
-        bestIndex = distance(inVec.begin(), it);
+        worstIndividual.cost = inVec[0].cost;
+        bestIndividual.cost = inVec[0].cost;
+        worstIndex = 0;
+        bestIndex = 0;
+        for (unsigned int i = 1; i < inVec.size(); i++) {
+            if (inVec[i].cost > worstIndividual.cost) {
+                worstIndividual.cost = inVec[i].cost;
+                worstIndex = i;
+            }
+            if (inVec[i].cost < bestIndividual.cost) {
+                bestIndividual.cost = inVec[i].cost;
+                bestIndex = i;
+            }
+        }
 
         // 将Cmax设为当代的最大Cost
         Cmax = double(worstIndividual.cost);
@@ -205,8 +209,6 @@ public:
     void performEvolution() {
         if (bestIndividual.cost < everBestIndividual.cost) {
             everBestIndividual = inVec[bestIndex];
-        } else {
-
         }
         inVec[worstIndex] = everBestIndividual;
     }
@@ -231,26 +233,27 @@ public:
 
     // 选择
     void select() {
+        int i;
         double totalFitness = 0;
         // 计算总 cost, 轮盘赌
-        for (int i = 0; i < POP_SCALE; i++) {
+        for (i = 0; i < POP_SCALE; i++) {
             totalFitness += inVec[i].fitness;
         }
 
         vector<double> cumFitness;
-        for (int i = 0; i < POP_SCALE; i++) {
+        for (i = 0; i < POP_SCALE; i++) {
             double temp = double((inVec[i].fitness * 1.0) / (totalFitness * 1.0));
             cumFitness.push_back(temp);
         }
 
         // 计算累加概率
-        for (int i = 1; i < POP_SCALE; i++) {
+        for (i = 1; i < POP_SCALE; i++) {
             cumFitness[i] = cumFitness[i-1] + cumFitness[i];
         }
 
         int index;
         vector<Individual> tempVec;
-        for (int i = 0; i < POP_SCALE; i++) {
+        for (i = 0; i < POP_SCALE; i++) {
             //生成一个[0， 1]之间的随机浮点数
             double range = uniform_real(0, 1);
             index = 0;
@@ -304,11 +307,13 @@ public:
         }
         */
         // Uniform Crossover
+        bitset<BITSIZE> bita;
+        bitset<BITSIZE> bitb;
         for (i = 0; i < POP_SCALE - 1; i += 2) {
             p = uniform_real(0, 1);
             if (p < Pc) {
-                bitset<BITSIZE> bita = inVec[index[i]].bitIn;
-                bitset<BITSIZE> bitb = inVec[index[i+1]].bitIn;
+                bita = inVec[index[i]].bitIn;
+                bitb = inVec[index[i+1]].bitIn;
                 for (j = 0; j < nodesNum; j++) {
                     int t = uniform_int(0, 1);
                     if (t == 1) {
@@ -330,7 +335,6 @@ public:
     void mutation() {
         int i, j;
         double p;
-
         // bit mutation
         for (i = 0; i < POP_SCALE; i++) {
             for (j = 0; j < nodesNum; j++) {
@@ -370,11 +374,16 @@ public:
             evalutePopulation();
             performEvolution();
             show();
-
             if (iteration > 50) {
                 break;
             }
-
+            if (iteration > 10) {
+                if (Pm == 0.006) {
+                    continue;
+                }
+                iteration = 0;
+                Pm += 0.002;
+            }
         }
     }
 
