@@ -3,9 +3,10 @@
 #include <cmath>
 
 #define MAX_NODES_NUM 1000 // 最大网络节点数量
-#define POP_SCALE 70  // 种群规模
 
 #define MAX_GENERATION 200 // 迭代次数
+
+int POP_SCALE = 80; // 种群规模
 
 double Cmax; // cost -> fitness (fitness = Cmax - cost)
 double Pc = 0.7; // 交叉概率
@@ -16,6 +17,8 @@ double Pm = 0.002; // 变异概率
 //1.65
 double c = 1.75; // 适应度变换参数
 
+double k3 = 0.002;
+double k4 = 0.007;
 
 int g_is_first = 1;
 /*
@@ -79,6 +82,9 @@ public:
     Individual bestIndividual;
     Individual worstIndividual;
     Individual everBestIndividual; // 历史最优个体
+    double averageFit;
+    double maxFit;
+    double minFit;
     int gen; // 代数
     int iteration;
 public:
@@ -117,11 +123,7 @@ public:
     // 计算 cost
     void calcCostValue() {
         for (int i = 0; i < POP_SCALE; i++) {
-            //cout<<"t"<<i;
-            //print_time("begin_time: ");
-            int cost = calCost(inVec[i].bitIn, 0);
-            inVec[i].cost = cost;
-            //print_time("end_time: ");
+            inVec[i].cost = calCost(inVec[i].bitIn, 0);
         }
     }
 
@@ -129,13 +131,12 @@ public:
     void calcFitnessValue() {
         double temp;
         double sumFit = 0;
-        double maxFit = 0;
+        maxFit = 0;
+        minFit = Cmax - double(inVec[0].cost);
         for (int i = 0; i < POP_SCALE; i++) {
-            double a = double(inVec[i].cost);
-            if (a < Cmax) {
-                temp = Cmax - a;
-            } else {
-                temp = 0.0;
+            temp = Cmax - double(inVec[i].cost);
+            if (temp < minFit) {
+                minFit = temp;
             }
             if (temp > maxFit) {
                 maxFit = temp;
@@ -144,28 +145,39 @@ public:
             inVec[i].fitness = temp;
         }
         // 计算当代适应度的均值
-        double averageFit = sumFit / (POP_SCALE * 1.0);
+        averageFit = sumFit / (POP_SCALE * 1.0);
         /* 对适应度做线性尺度变换
             F' = a * F + b
             a = (c - 1) * F_avg / (F_max - F_avg);
             b = (F_max - c * F_avg) * F_avg / (F_max - F_avg)
         */
+        double a_, b_;
+        if (minFit > (c * averageFit - maxFit) / (c - 1)) {
+            a_ = (c - 1) * averageFit / (maxFit - averageFit);
+            b_ = ((maxFit - c * averageFit) * averageFit) / (maxFit - averageFit);
+        } else {
+            a_ = averageFit / (averageFit - minFit);
+            b_ = minFit * averageFit / (minFit - averageFit);
+        }
+
         for (int i = 0; i < POP_SCALE; i++) {
-            temp = ((c - 1) * averageFit * inVec[i].fitness) / (maxFit - averageFit)
-                   + ((maxFit - c * averageFit) * averageFit) / (maxFit - averageFit);
-            if (temp < 0)temp = 0;
+            temp = a_ * inVec[i].fitness + b_;
             inVec[i].fitness = temp;
         }
+
 
         /*
         // 指数
         double m = 1 + log10(MAX_GENERATION);
-
-        double aa = pow(gen, m) / (averageFit + 0.000001);
+        cout <<"MMMMM : "<<m<<endl;
+        double aa = pow(gen, m) / (averageFit + 0.001);
+        cout <<"AAAAA : "<<aa<<endl;
         for (int i = 0; i < POP_SCALE; i++) {
-            temp = exp(-aa * inVec[i].fitness);
+            temp = exp(-1 * aa * inVec[i].fitness);
+            cout <<"TEMP : "<<temp<<" ";
             inVec[i].fitness = temp;
         }
+        cout <<endl;
         */
     }
 
@@ -178,11 +190,11 @@ public:
         bestIndex = 0;
         for (unsigned int i = 1; i < inVec.size(); i++) {
             if (inVec[i].cost > worstIndividual.cost) {
-                worstIndividual.cost = inVec[i].cost;
+                worstIndividual = inVec[i];
                 worstIndex = i;
             }
             if (inVec[i].cost < bestIndividual.cost) {
-                bestIndividual.cost = inVec[i].cost;
+                bestIndividual = inVec[i];
                 bestIndex = i;
             }
         }
@@ -209,8 +221,9 @@ public:
     void performEvolution() {
         if (bestIndividual.cost < everBestIndividual.cost) {
             everBestIndividual = inVec[bestIndex];
+        } else {
+            inVec[worstIndex] = everBestIndividual;
         }
-        inVec[worstIndex] = everBestIndividual;
     }
 
     // Must Choose
@@ -323,7 +336,7 @@ public:
                     }
                 }
                 // 判断服务器数量是否超过消费节点数量, 若超过, 则不交叉
-                if (bita.count() <= unsigned(clientNum) && bitb.count() <= unsigned(clientNum)) {
+                if (bita.count() > 0 && bita.count() <= unsigned(clientNum) && bitb.count() > 0 && bitb.count() <= unsigned(clientNum)) {
                     inVec[index[i]].bitIn = bita;
                     inVec[index[i+1]].bitIn = bitb;
                 }
@@ -333,10 +346,17 @@ public:
 
     // 变异
     void mutation() {
+        evalutePopulation();
         int i, j;
         double p;
         // bit mutation
         for (i = 0; i < POP_SCALE; i++) {
+            if (inVec[i].fitness >= averageFit) {
+                Pm = k3 * (maxFit - inVec[i].fitness) / (maxFit - averageFit);
+            } else {
+                Pm = k4;
+            }
+            //cout <<"PM: "<<Pm<<endl;
             for (j = 0; j < nodesNum; j++) {
                 p = uniform_real(0, 1);
                 // mutation
@@ -345,7 +365,7 @@ public:
                     inVec[i].bitIn.flip(j);
                 }
                 // 变异后服务器节点数量大于消费节点数量
-                if (inVec[i].bitIn.count() > unsigned(clientNum)) {
+                if (inVec[i].bitIn.count() > unsigned(clientNum) && inVec[i].bitIn.count() > 0) {
                     inVec[i].bitIn.flip(j);
                 }
             }
@@ -361,30 +381,47 @@ public:
 
     // 整个进化的全过程
     void epoch() {
-        // 初代
+        //print_time("epoch begin");
+        //int ssss=clock();
         gen = 1;
+        // 生成初代
         generateInitalPopulation();
+        // must choose point
         mustChooseVec();
+
+        // 计算 cost, fitness, 找出最优最差个体
         evalutePopulation();
-        show();
+        //show();
+        //int eeee=clock();
+        //printf("Time:%.6lf\n",(double)(eeee-ssss)/CLOCKS_PER_SEC);
+        //print_time("epoch end");
         while(gen < MAX_GENERATION) {
             gen++;
+            // 通过选择 交叉 变异 生成下一代
             generateNextPopulation();
             mustChooseVec();
+            // 评估新的一代
             evalutePopulation();
+            // 精英策略
             performEvolution();
-            show();
+            //show();
+
             if (iteration > 50) {
                 break;
             }
+
+            /*
+            //cout <<"Pm: "<<Pm<<endl;
             if (iteration > 10) {
                 if (Pm == 0.006) {
                     continue;
                 }
                 iteration = 0;
-                Pm += 0.002;
+                Pm += 0.001;
             }
+            */
         }
+        //showBestPosition();
     }
 
     // 输出种群现状
@@ -400,8 +437,8 @@ public:
         }
         average = double((sum * 1.0) / (POP_SCALE * 1.0));
         aveFit = double((sumFit * 1.0) / (POP_SCALE * 1.0));
-        printf("Gen = %d,  Average Cost = %lf, Average Fit = %lf, Min Cost = %d, Current MinCost = %d, Current worstCost = %d\n",
-               gen, average, aveFit, everBestIndividual.cost, bestIndividual.cost, worstIndividual.cost);
+        printf("Gen = %d, PopScale = %d, Average Cost = %lf, Average Fit = %lf, Min Cost = %d, Current MinCost = %d, Current worstCost = %d\n",
+               gen, POP_SCALE, average, aveFit, everBestIndividual.cost, bestIndividual.cost, worstIndividual.cost);
 
         /*
         vector<Individual>::iterator it;
@@ -411,5 +448,21 @@ public:
 
         cout<<endl<<endl;
         */
+    }
+
+    void showBestPosition() {
+        cout << "Must Choose: ";
+        for (unsigned int i = 0; i < mustChoose.size(); i++) {
+            cout <<mustChoose[i]<<" ";
+        }
+        cout <<endl;
+        cout <<"Cost: "<<everBestIndividual.cost<<endl;
+        cout <<"Position: ";
+        for (int i = 0; i < nodesNum; i++) {
+            if (everBestIndividual.bitIn[i] == 1) {
+                cout <<i<<" ";
+            }
+        }
+        cout <<endl;
     }
 };

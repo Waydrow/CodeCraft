@@ -12,8 +12,8 @@ for i = 1 : 3
    disp(tline)  %显示读入的行的内容，你也可以把它存储到某个字符串变量中
 end  %循环结束，此时fid 停留在fgetl最后读的一行末端。
 %读完前7行后，用fscanf继续读
-%a= 'Gen = 0,  Average Cost = 4251.510000, Average Fit = 1686.490000, Min Cost = 2773, Current MinCost = 2773, Current worstCost = 5938';
-A = fscanf(topo_file, '%*s %*c %d%*c  %*s %*s %*c %f%*c %*s %*s %*c %*f%*c %*s %*s %*c %d%*c %*s %*s %*c %d%*c %*s %*s %*c %d',[5 200]);
+%a= 'Gen = 67, PopScale = 50, Average Cost = 1995.680000, Average Fit = 335.032384, Min Cost = 1967, Current MinCost = 1967, Current worstCost = 2207';
+A = fscanf(topo_file, '%*s %*c %d%*c %*s %*c %*d%*c %*s %*s %*c %f%*c %*s %*s %*c %*f%*c %*s %*s %*c %d%*c %*s %*s %*c %d%*c %*s %*s %*c %d',[5 200]);
 x=A(1,:);
 y=A(2,:);
 minCost=min(A(3,:));

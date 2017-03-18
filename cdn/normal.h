@@ -168,8 +168,11 @@ bitset<BITSIZE> getBetter() {
     }
     return rel;
 }
+//long long zong=0;
+//double cishu=0;
 //..xt:给出某个体的评估值(严格使用最小费用最大流评估)
 int calCost(bitset<BITSIZE>gene,int mustCal) {
+    //int ssss=clock();
     unsigned long long relHash=getHash(gene);
     if((!mustCal)&&mp.find(relHash)!=mp.end())return mp[relHash];
     buildBasicGraph(nodesNum,linkNum,clientNum);
@@ -183,6 +186,9 @@ int calCost(bitset<BITSIZE>gene,int mustCal) {
     }
     int costRel=maxcostflow();
     int addit=checkSatisfy(nodesNum,clientNum);
+    //int eeee=clock();
+    //zong+=eeee-ssss;
+    //cishu++;
     return mp[relHash]=costRel+(gene.count()+addit)*deployCost;
 }
 //..xt:递归寻找路径（用于打印结果）
