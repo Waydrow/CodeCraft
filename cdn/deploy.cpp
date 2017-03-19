@@ -127,6 +127,14 @@ void deploy_server(char * topo[MAX_EDGE_NUM], int line_num,char * filename) {
     }
     cout <<endl;
     */
+    /*
+    for (int i = 0; i < 20; i++) {
+        Population p = Population();
+        p.epoch();
+        mp.clear();
+        cout <<"Min Cost: "<<p.everBestIndividual.cost<<endl;
+    }
+    */
 
     Population p = Population();//初始化种群参数
     p.epoch();//整个迭代环境

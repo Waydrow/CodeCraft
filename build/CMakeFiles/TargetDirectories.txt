@@ -1,1 +1,0 @@
-/mnt/hgfs/codecraft/SDK-gcc/build/CMakeFiles/cdn.dir

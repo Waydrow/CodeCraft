@@ -16,10 +16,10 @@ double c = 1.75; // 适应度变换参数
 
 const double A = 9.903438;
 
-double Pcmax = 0.6;
+double Pcmax = 0.9;
 double Pcmin = 0.7;
-double Pmmax = 0.1;
-double Pmmin = 0.003;
+double Pmmax = 0.05;
+double Pmmin = 0.002;
 
 
 int g_is_first = 1;
@@ -428,7 +428,7 @@ public:
         // 计算 cost, fitness, 找出最优最差个体
         evalutePopulation();
         everBestIndividual = bestIndividual;
-        show();
+        //show();
         //int eeee=clock();
         //printf("Time:%.6lf\n",(double)(eeee-ssss)/CLOCKS_PER_SEC);
         //print_time("epoch end");
@@ -441,7 +441,7 @@ public:
             evalutePopulation();
             // 精英策略
             performEvolution();
-            show();
+            //show();
             //cout <<endl<<endl<<"ITERATION: "<<iteration<<endl<<endl;
 
             if (iteration > 50) {
@@ -450,7 +450,7 @@ public:
             }
 
         }
-        showBestPosition();
+        //showBestPosition();
     }
 
     // 输出种群现状
