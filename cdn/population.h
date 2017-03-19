@@ -10,15 +10,17 @@ int POP_SCALE = 80; // 种群规模
 
 double Cmax; // cost -> fitness (fitness = Cmax - cost)
 double Pc = 0.7; // 交叉概率
-/*
-0.002
-*/
 double Pm = 0.002; // 变异概率
 //1.65
 double c = 1.75; // 适应度变换参数
 
-double k3 = 0.002;
-double k4 = 0.007;
+const double A = 9.903438;
+
+double Pcmax = 0.6;
+double Pcmin = 0.7;
+double Pmmax = 0.1;
+double Pmmin = 0.003;
+
 
 int g_is_first = 1;
 /*
@@ -44,6 +46,28 @@ int uniform_int(int a, int b) {
     }
 
     return (int)((double)rand() / ((RAND_MAX + 1.0) / (b - a + 1.0)) + a);
+}
+
+/*
+ return max element
+*/
+double max_ele(double a, double b) {
+    if (a > b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+
+/*
+ return the minimum element
+*/
+double min_ele(double a, double b) {
+    if (a < b) {
+        return a;
+    } else {
+        return b;
+    }
 }
 
 // 个体类
@@ -201,18 +225,6 @@ public:
 
         // 将Cmax设为当代的最大Cost
         Cmax = double(worstIndividual.cost);
-
-        if (gen == 1) {
-            everBestIndividual = bestIndividual;
-            iteration = 0;
-        } else {
-            if (bestIndividual.cost < everBestIndividual.cost) {
-                iteration = 0;
-                everBestIndividual = bestIndividual;
-            } else {
-                iteration++;
-            }
-        }
     }
 
     /* 精英策略
@@ -221,8 +233,10 @@ public:
     void performEvolution() {
         if (bestIndividual.cost < everBestIndividual.cost) {
             everBestIndividual = inVec[bestIndex];
+            iteration = 0;
         } else {
             inVec[worstIndex] = everBestIndividual;
+            iteration++;
         }
     }
 
@@ -296,6 +310,10 @@ public:
             index[i] = index[point + i];
             index[point + i] = temp;
         }
+        evalutePopulation();
+        double biggerFit;
+        bitset<BITSIZE> bita;
+        bitset<BITSIZE> bitb;
 
         /*
         // one-point crossover
@@ -319,10 +337,16 @@ public:
             }
         }
         */
+
         // Uniform Crossover
-        bitset<BITSIZE> bita;
-        bitset<BITSIZE> bitb;
         for (i = 0; i < POP_SCALE - 1; i += 2) {
+            biggerFit = max_ele(inVec[index[i]].fitness, inVec[index[i+1]].fitness);
+            if (biggerFit >= averageFit) {
+                Pc = Pcmin + (Pcmax - Pcmin) / (1 + exp(A * (2 * (biggerFit - averageFit) / (maxFit - averageFit))));
+            } else {
+                Pc = Pcmax;
+            }
+            //cout <<"Pc: "<<Pc<<endl;
             p = uniform_real(0, 1);
             if (p < Pc) {
                 bita = inVec[index[i]].bitIn;
@@ -347,17 +371,16 @@ public:
     // 变异
     void mutation() {
         evalutePopulation();
-        int i, j;
         double p;
         // bit mutation
-        for (i = 0; i < POP_SCALE; i++) {
+        for (int i = 0; i < POP_SCALE; i++) {
             if (inVec[i].fitness >= averageFit) {
-                Pm = k3 * (maxFit - inVec[i].fitness) / (maxFit - averageFit);
+                Pm = Pmmin + (Pmmax - Pmmin) / (1 + exp(A * (2 * (inVec[i].fitness - averageFit) / (maxFit - averageFit))));
             } else {
-                Pm = k4;
+                Pm = Pmmax;
             }
-            //cout <<"PM: "<<Pm<<endl;
-            for (j = 0; j < nodesNum; j++) {
+
+            for (int j = 0; j < nodesNum; j++) {
                 p = uniform_real(0, 1);
                 // mutation
                 if (p < Pm) {
@@ -369,6 +392,18 @@ public:
                     inVec[i].bitIn.flip(j);
                 }
             }
+
+            /*
+            // one point mutation
+            int postion = uniform_int(0, nodesNum-1);
+            p = uniform_real(0, 1);
+            if (p < Pm) {
+                inVec[i].bitIn.flip(postion);
+            }
+            if (inVec[i].bitIn.count() > unsigned(clientNum) && inVec[i].bitIn.count() > 0) {
+                    inVec[i].bitIn.flip(postion);
+            }
+            */
         }
     }
 
@@ -384,6 +419,7 @@ public:
         //print_time("epoch begin");
         //int ssss=clock();
         gen = 1;
+        iteration = 0;
         // 生成初代
         generateInitalPopulation();
         // must choose point
@@ -391,7 +427,8 @@ public:
 
         // 计算 cost, fitness, 找出最优最差个体
         evalutePopulation();
-        //show();
+        everBestIndividual = bestIndividual;
+        show();
         //int eeee=clock();
         //printf("Time:%.6lf\n",(double)(eeee-ssss)/CLOCKS_PER_SEC);
         //print_time("epoch end");
@@ -404,24 +441,16 @@ public:
             evalutePopulation();
             // 精英策略
             performEvolution();
-            //show();
+            show();
+            //cout <<endl<<endl<<"ITERATION: "<<iteration<<endl<<endl;
 
             if (iteration > 50) {
+                //cout <<endl<<endl<<"AAAAAAAAAAAA: "<<iteration<<endl<<endl;
                 break;
             }
 
-            /*
-            //cout <<"Pm: "<<Pm<<endl;
-            if (iteration > 10) {
-                if (Pm == 0.006) {
-                    continue;
-                }
-                iteration = 0;
-                Pm += 0.001;
-            }
-            */
         }
-        //showBestPosition();
+        showBestPosition();
     }
 
     // 输出种群现状
@@ -440,14 +469,14 @@ public:
         printf("Gen = %d, PopScale = %d, Average Cost = %lf, Average Fit = %lf, Min Cost = %d, Current MinCost = %d, Current worstCost = %d\n",
                gen, POP_SCALE, average, aveFit, everBestIndividual.cost, bestIndividual.cost, worstIndividual.cost);
 
-        /*
+/*
         vector<Individual>::iterator it;
         for (it = inVec.begin(); it != inVec.end(); it++) {
             (*it).show();
         }
 
         cout<<endl<<endl;
-        */
+*/
     }
 
     void showBestPosition() {
