@@ -22,3 +22,12 @@
 *.la
 *.a
 *.lib
+
+# zip file
+*.zip
+*.tar.gz
+
+# Make File and Excute File
+/bin/*
+/build/*
+

@@ -127,24 +127,23 @@ void deploy_server(char * topo[MAX_EDGE_NUM], int line_num,char * filename) {
     }
     cout <<endl;
     */
-    /*
+
     for (int i = 0; i < 20; i++) {
         Population p = Population();
         p.epoch();
         mp.clear();
         cout <<"Min Cost: "<<p.everBestIndividual.cost<<endl;
     }
-    */
 
+/*
     Population p = Population();//初始化种群参数
     p.epoch();//整个迭代环境
-
     bitset<BITSIZE>rel = p.everBestIndividual.bitIn;//取得最优个体DNA
     calCost(rel,1);//目的并非计算cost，而是构造网络环境，从而计算有哪些clients未满足
     rel|=getBetter();//将之前relDNA中未布置服务器的点部署服务器，得到真实DNA
     calCost(rel,1);//对真实DNA，构造网络环境
     printRel(rel);//打印结果
-
+*/
     //printf("%.6lf\n",(double)zong/CLOCKS_PER_SEC/cishu);
     // 直接调用输出文件的方法输出到指定文件中(ps请注意格式的正确性，如果有解，第一行只有一个数据；第二行为空；第三行开始才是具体的数据，数据之间用一个空格分隔开)
     write_result(relStr.c_str(), filename);

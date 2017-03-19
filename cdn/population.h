@@ -16,10 +16,10 @@ double c = 1.75; // 适应度变换参数
 
 const double A = 9.903438;
 
-double Pcmax = 0.9;
+double Pcmax = 0.8;
 double Pcmin = 0.7;
-double Pmmax = 0.05;
-double Pmmin = 0.002;
+double Pmmax = 0.06;
+double Pmmin = 0.001;
 
 
 int g_is_first = 1;
@@ -89,7 +89,6 @@ public:
         cout << endl << "COST: " << cost << " FITNESS: "<< fitness << "  Server Num: " << bitIn.count() << endl;
     }
 };
-
 
 // 自定义比较函数
 bool compByCost(Individual a, Individual b) {
@@ -417,20 +416,16 @@ public:
     // 整个进化的全过程
     void epoch() {
         //print_time("epoch begin");
-        //int ssss=clock();
         gen = 1;
         iteration = 0;
         // 生成初代
         generateInitalPopulation();
         // must choose point
         mustChooseVec();
-
         // 计算 cost, fitness, 找出最优最差个体
         evalutePopulation();
         everBestIndividual = bestIndividual;
         //show();
-        //int eeee=clock();
-        //printf("Time:%.6lf\n",(double)(eeee-ssss)/CLOCKS_PER_SEC);
         //print_time("epoch end");
         while(gen < MAX_GENERATION) {
             gen++;
@@ -442,13 +437,9 @@ public:
             // 精英策略
             performEvolution();
             //show();
-            //cout <<endl<<endl<<"ITERATION: "<<iteration<<endl<<endl;
-
             if (iteration > 50) {
-                //cout <<endl<<endl<<"AAAAAAAAAAAA: "<<iteration<<endl<<endl;
                 break;
             }
-
         }
         //showBestPosition();
     }
