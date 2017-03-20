@@ -56,13 +56,6 @@ int links[50500][4];
 int consumptionNodes[505][3];
 int myNodes[1000];
 
-/*
-double Pcmax = 0.7;
-double Pcmin = 0.4;
-double Pmmax = 0.08;
-double Pmmin = 0.002;
-*/
-
 string relStr;
 
 #include "population.h"
@@ -81,52 +74,6 @@ void deploy_server(char * topo[MAX_EDGE_NUM], int line_num,char * filename) {
     sscanf(topo[2], "%d", &deployCost);
     readData(topo,nodesNum,linkNum,clientNum);//将数据从缓存中读到数组中
     getMustChoose();//挑选出必须选择的直接相连的点
-
-    /*
-    int maxTimes = 0;
-    double tempP[4];
-    int clu = 0;
-    for (double x = 0.5; x <= 0.9; x += 0.1) {
-        Pcmax = x;
-        for (double y = 0.1; y <= 0.7; y += 0.1) {
-            Pcmin = y;
-            for (double z = 0.02; z <= 0.1; z += 0.01) {
-                Pmmax = z;
-                for (double w = 0.001; w <= 0.007; w += 0.001) {
-                    Pmmin = w;
-                    int temp = 0;
-                    for (int i = 0; i < 20; i++) {
-                        Population p = Population();
-                        p.epoch();
-                        mp.clear();
-                        int cost = p.everBestIndividual.cost;
-                        if (cost == 2136) {
-                            temp ++;
-                        }
-                    }
-                    if(temp > maxTimes) {
-                        maxTimes = temp;
-                        tempP[0] = x;
-                        tempP[1] = y;
-                        tempP[2] = z;
-                        tempP[3] = w;
-                    }
-                    cout << clu;
-                    cout <<"   Temp: " << temp;
-                    cout << "   Max Times: "<<maxTimes<<endl;
-                    printf("%lf  %lf  %lf  %lf\n", x, y, z, w);
-                    clu ++;
-                }
-            }
-        }
-    }
-    cout << endl<<endl;
-    cout << "Max Times: "<<maxTimes<<endl;
-    for (int i = 0; i < 4; i++) {
-        cout << tempP[i] <<" ";
-    }
-    cout <<endl;
-    */
 /*
     for (int i = 0; i < 20; i++) {
         Population p = Population();

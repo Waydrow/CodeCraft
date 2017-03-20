@@ -14,14 +14,6 @@ double Pm = 0.002; // 变异概率
 //1.65
 double c = 1.75; // 适应度变换参数
 
-const double A = 9.903438;
-
-double Pcmax = 0.8;
-double Pcmin = 0.7;
-double Pmmax = 0.06;
-double Pmmin = 0.001;
-
-
 int g_is_first = 1;
 /*
 ** return a random real in the interval
@@ -224,6 +216,18 @@ public:
 
         // 将Cmax设为当代的最大Cost
         Cmax = double(worstIndividual.cost);
+
+         if (gen == 1) {
+            everBestIndividual = bestIndividual;
+            iteration = 0;
+        } else {
+            if (bestIndividual.cost < everBestIndividual.cost) {
+                iteration = 0;
+                everBestIndividual = bestIndividual;
+            } else {
+                iteration++;
+            }
+        }
     }
 
     /* 精英策略
@@ -232,10 +236,8 @@ public:
     void performEvolution() {
         if (bestIndividual.cost < everBestIndividual.cost) {
             everBestIndividual = inVec[bestIndex];
-            iteration = 0;
         } else {
             inVec[worstIndex] = everBestIndividual;
-            iteration++;
         }
     }
 
@@ -309,11 +311,8 @@ public:
             index[i] = index[point + i];
             index[point + i] = temp;
         }
-        evalutePopulation();
-        double biggerFit;
         bitset<BITSIZE> bita;
         bitset<BITSIZE> bitb;
-
         /*
         // one-point crossover
         for (i = 0; i < POP_SCALE - 1; i += 2) {
@@ -321,8 +320,8 @@ public:
             // 若小于交叉概率, 则进行交叉
             if (p < Pc) {
                 point = uniform_int(0, nodesNum - 2) + 1;
-                bitset<BITSIZE> bita = inVec[index[i]].bitIn;
-                bitset<BITSIZE> bitb = inVec[index[i+1]].bitIn;
+                bita = inVec[index[i]].bitIn;
+                bitb = inVec[index[i+1]].bitIn;
                 for (j = point; j < nodesNum; j++) {
                     temp = bita[j];
                     bita[j] = bitb[j];
@@ -339,13 +338,6 @@ public:
 
         // Uniform Crossover
         for (i = 0; i < POP_SCALE - 1; i += 2) {
-            biggerFit = max_ele(inVec[index[i]].fitness, inVec[index[i+1]].fitness);
-            if (biggerFit >= averageFit) {
-                Pc = Pcmin + (Pcmax - Pcmin) / (1 + exp(A * (2 * (biggerFit - averageFit) / (maxFit - averageFit))));
-            } else {
-                Pc = Pcmax;
-            }
-            //cout <<"Pc: "<<Pc<<endl;
             p = uniform_real(0, 1);
             if (p < Pc) {
                 bita = inVec[index[i]].bitIn;
@@ -369,16 +361,9 @@ public:
 
     // 变异
     void mutation() {
-        evalutePopulation();
         double p;
         // bit mutation
         for (int i = 0; i < POP_SCALE; i++) {
-            if (inVec[i].fitness >= averageFit) {
-                Pm = Pmmin + (Pmmax - Pmmin) / (1 + exp(A * (2 * (inVec[i].fitness - averageFit) / (maxFit - averageFit))));
-            } else {
-                Pm = Pmmax;
-            }
-
             for (int j = 0; j < nodesNum; j++) {
                 p = uniform_real(0, 1);
                 // mutation
@@ -417,15 +402,13 @@ public:
     void epoch() {
         //print_time("epoch begin");
         gen = 1;
-        iteration = 0;
         // 生成初代
         generateInitalPopulation();
         // must choose point
         mustChooseVec();
         // 计算 cost, fitness, 找出最优最差个体
         evalutePopulation();
-        everBestIndividual = bestIndividual;
-        show();
+        //show();
         //print_time("epoch end");
         while(gen < MAX_GENERATION) {
             gen++;
@@ -436,12 +419,12 @@ public:
             evalutePopulation();
             // 精英策略
             performEvolution();
-            show();
+            //show();
             if (iteration > 50) {
                 //break;
             }
         }
-        showBestPosition();
+        //showBestPosition();
     }
 
     // 输出种群现状
