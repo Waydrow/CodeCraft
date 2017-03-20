@@ -11,8 +11,9 @@ int POP_SCALE = 80; // 种群规模
 double Cmax; // cost -> fitness (fitness = Cmax - cost)
 double Pc = 0.7; // 交叉概率
 double Pm = 0.002; // 变异概率
-//1.65
-double c = 1.75; // 适应度变换参数
+
+double c = 1.75; // 线性变换参数
+double m = 1 + log10(MAX_GENERATION); // 指数变换参数
 
 int g_is_first = 1;
 /*
@@ -98,8 +99,6 @@ public:
     Individual worstIndividual;
     Individual everBestIndividual; // 历史最优个体
     double averageFit;
-    double maxFit;
-    double minFit;
     int gen; // 代数
     int iteration;
 public:
@@ -137,35 +136,22 @@ public:
 
     // 计算 cost
     void calcCostValue() {
+        double sumFit = 0;
         for (int i = 0; i < POP_SCALE; i++) {
             inVec[i].cost = calCost(inVec[i].bitIn, 0);
+            sumFit += double(inVec[i].cost);
         }
+        averageFit = sumFit / (POP_SCALE * 1.0);
     }
 
     // 计算 适应度
     void calcFitnessValue() {
-        double temp;
-        double sumFit = 0;
-        maxFit = 0;
-        minFit = Cmax - double(inVec[0].cost);
-        for (int i = 0; i < POP_SCALE; i++) {
-            temp = Cmax - double(inVec[i].cost);
-            if (temp < minFit) {
-                minFit = temp;
-            }
-            if (temp > maxFit) {
-                maxFit = temp;
-            }
-            sumFit += temp;
-            inVec[i].fitness = temp;
-        }
-        // 计算当代适应度的均值
-        averageFit = sumFit / (POP_SCALE * 1.0);
+
         /* 对适应度做线性尺度变换
             F' = a * F + b
             a = (c - 1) * F_avg / (F_max - F_avg);
             b = (F_max - c * F_avg) * F_avg / (F_max - F_avg)
-        */
+        // --------------------------------------------------
         double a_, b_;
         if (minFit > (c * averageFit - maxFit) / (c - 1)) {
             a_ = (c - 1) * averageFit / (maxFit - averageFit);
@@ -179,21 +165,13 @@ public:
             temp = a_ * inVec[i].fitness + b_;
             inVec[i].fitness = temp;
         }
-
-
-        /*
-        // 指数
-        double m = 1 + log10(MAX_GENERATION);
-        cout <<"MMMMM : "<<m<<endl;
-        double aa = pow(gen, m) / (averageFit + 0.001);
-        cout <<"AAAAA : "<<aa<<endl;
-        for (int i = 0; i < POP_SCALE; i++) {
-            temp = exp(-1 * aa * inVec[i].fitness);
-            cout <<"TEMP : "<<temp<<" ";
-            inVec[i].fitness = temp;
-        }
-        cout <<endl;
         */
+
+        // 指数
+        double aa = pow(gen, 1 / m) / (averageFit + 0.001);
+        for (int i = 0; i < POP_SCALE; i++) {
+            inVec[i].fitness = exp(-1 * aa * double(inVec[i].cost));
+        }
     }
 
     // find best and worst individual of this generation

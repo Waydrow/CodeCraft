@@ -25,7 +25,7 @@
 
 # zip file
 *.zip
-*.tar.gz
+*.gz
 
 # Make File and Excute File
 /bin/*
