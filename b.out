@@ -1,25 +1,208 @@
-Begin date/time is: Sun Mar 19 20:53:59 2017
+Begin date/time is: Mon Mar 20 18:40:45 2017
  	used time is 0 s 0 ms.
-line num is :2270 
-Min Cost: 2864
-Min Cost: 2821
-Min Cost: 2821
-Min Cost: 2864
-Min Cost: 2864
-Min Cost: 2902
-Min Cost: 2976
-Min Cost: 3011
-Min Cost: 3166
-Min Cost: 3252
-Min Cost: 3064
-Min Cost: 3068
-Min Cost: 2941
-Min Cost: 3240
-Min Cost: 3892
-Min Cost: 2821
-Min Cost: 3195
-Min Cost: 3931
-Min Cost: 3052
-Min Cost: 3879
-End date/time is: Sun Mar 19 21:05:02 2017
- 	used time is 663 s 151 ms.
+line num is :822 
+Gen = 1, PopScale = 80, Average Cost = 6937.687500, Average Fit = 3376.312500, Min Cost = 3814, Current MinCost = 3814, Current worstCost = 10314
+Gen = 2, PopScale = 80, Average Cost = 7797.300000, Average Fit = 2763.700000, Min Cost = 3524, Current MinCost = 3524, Current worstCost = 10561
+Gen = 3, PopScale = 80, Average Cost = 7302.925000, Average Fit = 3286.044731, Min Cost = 3524, Current MinCost = 3727, Current worstCost = 10631
+Gen = 4, PopScale = 80, Average Cost = 6968.762500, Average Fit = 3508.766076, Min Cost = 3524, Current MinCost = 3727, Current worstCost = 10514
+Gen = 5, PopScale = 80, Average Cost = 6835.412500, Average Fit = 3636.384575, Min Cost = 3524, Current MinCost = 3524, Current worstCost = 10508
+Gen = 6, PopScale = 80, Average Cost = 6273.212500, Average Fit = 4207.943438, Min Cost = 3524, Current MinCost = 3577, Current worstCost = 10508
+Gen = 7, PopScale = 80, Average Cost = 6873.812500, Average Fit = 3552.187500, Min Cost = 3325, Current MinCost = 3325, Current worstCost = 10426
+Gen = 8, PopScale = 80, Average Cost = 6487.575000, Average Fit = 4013.717205, Min Cost = 3325, Current MinCost = 3325, Current worstCost = 10518
+Gen = 9, PopScale = 80, Average Cost = 6203.525000, Average Fit = 4288.441602, Min Cost = 3325, Current MinCost = 3524, Current worstCost = 10504
+Gen = 10, PopScale = 80, Average Cost = 6630.550000, Average Fit = 3847.328284, Min Cost = 3325, Current MinCost = 3461, Current worstCost = 10496
+Gen = 11, PopScale = 80, Average Cost = 6602.337500, Average Fit = 3732.107322, Min Cost = 3325, Current MinCost = 3325, Current worstCost = 10353
+Gen = 12, PopScale = 80, Average Cost = 6330.662500, Average Fit = 4129.786855, Min Cost = 3325, Current MinCost = 3325, Current worstCost = 10473
+Gen = 13, PopScale = 80, Average Cost = 6358.500000, Average Fit = 4057.235785, Min Cost = 3325, Current MinCost = 3325, Current worstCost = 10429
+Gen = 14, PopScale = 80, Average Cost = 6806.525000, Average Fit = 3726.475000, Min Cost = 3245, Current MinCost = 3245, Current worstCost = 10533
+Gen = 15, PopScale = 80, Average Cost = 6035.975000, Average Fit = 4537.804141, Min Cost = 3245, Current MinCost = 3245, Current worstCost = 10584
+Gen = 16, PopScale = 80, Average Cost = 5860.912500, Average Fit = 4345.516641, Min Cost = 3245, Current MinCost = 3245, Current worstCost = 10212
+Gen = 17, PopScale = 80, Average Cost = 6276.237500, Average Fit = 4163.260336, Min Cost = 3245, Current MinCost = 3245, Current worstCost = 10449
+Gen = 18, PopScale = 80, Average Cost = 5958.162500, Average Fit = 4298.837500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10257
+Gen = 19, PopScale = 80, Average Cost = 6010.112500, Average Fit = 4244.912500, Min Cost = 3126, Current MinCost = 3159, Current worstCost = 10255
+Gen = 20, PopScale = 80, Average Cost = 5738.337500, Average Fit = 4531.500000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10270
+Gen = 21, PopScale = 80, Average Cost = 5975.250000, Average Fit = 4621.450000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10601
+Gen = 22, PopScale = 80, Average Cost = 6140.987500, Average Fit = 4358.937500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10503
+Gen = 23, PopScale = 80, Average Cost = 5612.637500, Average Fit = 4671.025000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10284
+Gen = 24, PopScale = 80, Average Cost = 5536.400000, Average Fit = 4644.562500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10180
+Gen = 25, PopScale = 80, Average Cost = 5724.825000, Average Fit = 4565.750000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10291
+Gen = 26, PopScale = 80, Average Cost = 5333.375000, Average Fit = 4972.012500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10306
+Gen = 27, PopScale = 80, Average Cost = 5458.612500, Average Fit = 4866.525000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10326
+Gen = 28, PopScale = 80, Average Cost = 5689.262500, Average Fit = 4475.900000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10164
+Gen = 29, PopScale = 80, Average Cost = 4760.625000, Average Fit = 5584.262500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10346
+Gen = 30, PopScale = 80, Average Cost = 5633.625000, Average Fit = 4603.625000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10237
+Gen = 31, PopScale = 80, Average Cost = 4473.237500, Average Fit = 5436.162500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 9905
+Gen = 32, PopScale = 80, Average Cost = 5726.625000, Average Fit = 4554.075000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10281
+Gen = 33, PopScale = 80, Average Cost = 5025.712500, Average Fit = 5112.787500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10137
+Gen = 34, PopScale = 80, Average Cost = 5058.650000, Average Fit = 5040.350000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10097
+Gen = 35, PopScale = 80, Average Cost = 4917.475000, Average Fit = 5564.675000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10485
+Gen = 36, PopScale = 80, Average Cost = 4931.975000, Average Fit = 5169.987500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10100
+Gen = 37, PopScale = 80, Average Cost = 5515.137500, Average Fit = 4715.200000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10230
+Gen = 38, PopScale = 80, Average Cost = 4884.787500, Average Fit = 5270.500000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10154
+Gen = 39, PopScale = 80, Average Cost = 6467.475000, Average Fit = 3698.122882, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10174
+Gen = 40, PopScale = 80, Average Cost = 4878.625000, Average Fit = 5268.762500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10146
+Gen = 41, PopScale = 80, Average Cost = 5810.425000, Average Fit = 4522.612500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10334
+Gen = 42, PopScale = 80, Average Cost = 4759.062500, Average Fit = 5413.012500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10171
+Gen = 43, PopScale = 80, Average Cost = 5396.187500, Average Fit = 4833.162500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10229
+Gen = 44, PopScale = 80, Average Cost = 5694.287500, Average Fit = 4526.175000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10220
+Gen = 45, PopScale = 80, Average Cost = 5269.125000, Average Fit = 4889.125000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10157
+Gen = 46, PopScale = 80, Average Cost = 6041.975000, Average Fit = 4073.566739, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10114
+Gen = 47, PopScale = 80, Average Cost = 5862.125000, Average Fit = 4358.337500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10220
+Gen = 48, PopScale = 80, Average Cost = 5003.250000, Average Fit = 5155.000000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10157
+Gen = 49, PopScale = 80, Average Cost = 5494.375000, Average Fit = 4711.275000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10205
+Gen = 50, PopScale = 80, Average Cost = 5927.662500, Average Fit = 4354.025000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10282
+Gen = 51, PopScale = 80, Average Cost = 4659.200000, Average Fit = 5463.500000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10121
+Gen = 52, PopScale = 80, Average Cost = 5308.037500, Average Fit = 4921.312500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10229
+Gen = 53, PopScale = 80, Average Cost = 4568.562500, Average Fit = 5696.337500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10265
+Gen = 54, PopScale = 80, Average Cost = 5527.437500, Average Fit = 4809.550000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10338
+Gen = 55, PopScale = 80, Average Cost = 5577.675000, Average Fit = 4497.625000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10073
+Gen = 56, PopScale = 80, Average Cost = 5511.512500, Average Fit = 4817.575000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10330
+Gen = 57, PopScale = 80, Average Cost = 5198.087500, Average Fit = 4956.212500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10153
+Gen = 58, PopScale = 80, Average Cost = 5409.525000, Average Fit = 4677.625000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10085
+Gen = 59, PopScale = 80, Average Cost = 5555.787500, Average Fit = 4529.387500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10083
+Gen = 60, PopScale = 80, Average Cost = 5588.150000, Average Fit = 4659.962500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10248
+Gen = 61, PopScale = 80, Average Cost = 5431.075000, Average Fit = 4667.925000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10097
+Gen = 62, PopScale = 80, Average Cost = 5503.637500, Average Fit = 4756.325000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10260
+Gen = 63, PopScale = 80, Average Cost = 5155.600000, Average Fit = 4883.162500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10036
+Gen = 64, PopScale = 80, Average Cost = 5592.037500, Average Fit = 4502.025000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10092
+Gen = 65, PopScale = 80, Average Cost = 5259.762500, Average Fit = 4879.725000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10138
+Gen = 66, PopScale = 80, Average Cost = 5621.875000, Average Fit = 4421.825000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10041
+Gen = 67, PopScale = 80, Average Cost = 5761.737500, Average Fit = 4398.487500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10159
+Gen = 68, PopScale = 80, Average Cost = 4958.212500, Average Fit = 5059.812500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10015
+Gen = 69, PopScale = 80, Average Cost = 6207.862500, Average Fit = 3952.203495, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10163
+Gen = 70, PopScale = 80, Average Cost = 5059.975000, Average Fit = 5213.812500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10274
+Gen = 71, PopScale = 80, Average Cost = 5881.587500, Average Fit = 4233.212500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10113
+Gen = 72, PopScale = 80, Average Cost = 4789.037500, Average Fit = 5454.137500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10243
+Gen = 73, PopScale = 80, Average Cost = 5422.450000, Average Fit = 4817.762500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10240
+Gen = 74, PopScale = 80, Average Cost = 5450.750000, Average Fit = 4565.300000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10013
+Gen = 75, PopScale = 80, Average Cost = 5811.725000, Average Fit = 4373.187500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10184
+Gen = 76, PopScale = 80, Average Cost = 5341.937500, Average Fit = 5162.925000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10508
+Gen = 77, PopScale = 80, Average Cost = 5659.350000, Average Fit = 4915.625000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10579
+Gen = 78, PopScale = 80, Average Cost = 5550.887500, Average Fit = 4903.612500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10457
+Gen = 79, PopScale = 80, Average Cost = 5344.750000, Average Fit = 5020.875000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10367
+Gen = 80, PopScale = 80, Average Cost = 5737.125000, Average Fit = 4594.925000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10333
+Gen = 81, PopScale = 80, Average Cost = 5654.512500, Average Fit = 4829.612500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10487
+Gen = 82, PopScale = 80, Average Cost = 5859.087500, Average Fit = 4322.862500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10181
+Gen = 83, PopScale = 80, Average Cost = 5336.200000, Average Fit = 4787.487500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10122
+Gen = 84, PopScale = 80, Average Cost = 5567.887500, Average Fit = 4873.775000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10444
+Gen = 85, PopScale = 80, Average Cost = 5335.075000, Average Fit = 4781.700000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10115
+Gen = 86, PopScale = 80, Average Cost = 6297.412500, Average Fit = 3960.261617, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10263
+Gen = 87, PopScale = 80, Average Cost = 5148.662500, Average Fit = 5239.675000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10390
+Gen = 88, PopScale = 80, Average Cost = 4935.962500, Average Fit = 5086.012500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10019
+Gen = 89, PopScale = 80, Average Cost = 5540.962500, Average Fit = 4744.675000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10286
+Gen = 90, PopScale = 80, Average Cost = 5217.912500, Average Fit = 5048.962500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10267
+Gen = 91, PopScale = 80, Average Cost = 5625.300000, Average Fit = 4589.237500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10214
+Gen = 92, PopScale = 80, Average Cost = 4847.362500, Average Fit = 5206.212500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10051
+Gen = 93, PopScale = 80, Average Cost = 5571.987500, Average Fit = 4478.625000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10048
+Gen = 94, PopScale = 80, Average Cost = 5052.600000, Average Fit = 5182.675000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10235
+Gen = 95, PopScale = 80, Average Cost = 5624.137500, Average Fit = 4762.225000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10388
+Gen = 96, PopScale = 80, Average Cost = 4812.112500, Average Fit = 5316.512500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10127
+Gen = 97, PopScale = 80, Average Cost = 5711.800000, Average Fit = 4440.525000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10151
+Gen = 98, PopScale = 80, Average Cost = 5967.062500, Average Fit = 4230.687500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10197
+Gen = 99, PopScale = 80, Average Cost = 5113.287500, Average Fit = 5123.962500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10237
+Gen = 100, PopScale = 80, Average Cost = 5488.612500, Average Fit = 4647.912500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10135
+Gen = 101, PopScale = 80, Average Cost = 5708.500000, Average Fit = 4788.462500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10500
+Gen = 102, PopScale = 80, Average Cost = 4779.262500, Average Fit = 5597.225000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10378
+Gen = 103, PopScale = 80, Average Cost = 5699.287500, Average Fit = 4604.125000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10304
+Gen = 104, PopScale = 80, Average Cost = 4756.912500, Average Fit = 5330.237500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10085
+Gen = 105, PopScale = 80, Average Cost = 5450.762500, Average Fit = 4952.387500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10405
+Gen = 106, PopScale = 80, Average Cost = 4965.862500, Average Fit = 5104.500000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10068
+Gen = 107, PopScale = 80, Average Cost = 5361.875000, Average Fit = 4730.212500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10090
+Gen = 108, PopScale = 80, Average Cost = 5770.625000, Average Fit = 4532.787500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10304
+Gen = 109, PopScale = 80, Average Cost = 5473.600000, Average Fit = 4840.675000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10315
+Gen = 110, PopScale = 80, Average Cost = 5217.287500, Average Fit = 5060.450000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10278
+Gen = 111, PopScale = 80, Average Cost = 5520.125000, Average Fit = 4856.362500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10378
+Gen = 112, PopScale = 80, Average Cost = 5583.562500, Average Fit = 4741.575000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10326
+Gen = 113, PopScale = 80, Average Cost = 4825.062500, Average Fit = 5255.175000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10078
+Gen = 114, PopScale = 80, Average Cost = 5733.262500, Average Fit = 4375.612500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10107
+Gen = 115, PopScale = 80, Average Cost = 4807.075000, Average Fit = 5581.262500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10390
+Gen = 116, PopScale = 80, Average Cost = 5456.400000, Average Fit = 4643.587500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10098
+Gen = 117, PopScale = 80, Average Cost = 6066.737500, Average Fit = 4106.061030, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10172
+Gen = 118, PopScale = 80, Average Cost = 5036.950000, Average Fit = 4969.225000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10003
+Gen = 119, PopScale = 80, Average Cost = 5105.687500, Average Fit = 5048.612500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10153
+Gen = 120, PopScale = 80, Average Cost = 5053.037500, Average Fit = 5332.337500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10387
+Gen = 121, PopScale = 80, Average Cost = 5446.050000, Average Fit = 4836.625000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10283
+Gen = 122, PopScale = 80, Average Cost = 5301.537500, Average Fit = 4972.250000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10274
+Gen = 123, PopScale = 80, Average Cost = 5090.362500, Average Fit = 5155.775000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10246
+Gen = 124, PopScale = 80, Average Cost = 5825.362500, Average Fit = 4359.550000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10184
+Gen = 125, PopScale = 80, Average Cost = 5079.887500, Average Fit = 5013.187500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10091
+Gen = 126, PopScale = 80, Average Cost = 5787.637500, Average Fit = 4398.262500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10185
+Gen = 127, PopScale = 80, Average Cost = 4851.125000, Average Fit = 5418.712500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10270
+Gen = 128, PopScale = 80, Average Cost = 5747.037500, Average Fit = 4362.825000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10108
+Gen = 129, PopScale = 80, Average Cost = 4764.950000, Average Fit = 5392.312500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10156
+Gen = 130, PopScale = 80, Average Cost = 5706.375000, Average Fit = 4589.137500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10296
+Gen = 131, PopScale = 80, Average Cost = 4908.200000, Average Fit = 5506.800000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10417
+Gen = 132, PopScale = 80, Average Cost = 5475.275000, Average Fit = 4701.737500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10176
+Gen = 133, PopScale = 80, Average Cost = 5660.562500, Average Fit = 4648.775000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10310
+Gen = 134, PopScale = 80, Average Cost = 4662.187500, Average Fit = 5577.037500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10239
+Gen = 135, PopScale = 80, Average Cost = 5894.037500, Average Fit = 4553.550000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10450
+Gen = 136, PopScale = 80, Average Cost = 4688.287500, Average Fit = 5664.500000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10354
+Gen = 137, PopScale = 80, Average Cost = 5131.537500, Average Fit = 5151.137500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10283
+Gen = 138, PopScale = 80, Average Cost = 4998.612500, Average Fit = 5119.150000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10116
+Gen = 139, PopScale = 80, Average Cost = 5197.875000, Average Fit = 4891.250000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10087
+Gen = 140, PopScale = 80, Average Cost = 5674.350000, Average Fit = 4671.525000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10347
+Gen = 141, PopScale = 80, Average Cost = 4520.762500, Average Fit = 5613.787500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10133
+Gen = 142, PopScale = 80, Average Cost = 6391.800000, Average Fit = 4002.296966, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10402
+Gen = 143, PopScale = 80, Average Cost = 4975.075000, Average Fit = 5083.437500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10056
+Gen = 144, PopScale = 80, Average Cost = 6137.262500, Average Fit = 4134.464106, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10273
+Gen = 145, PopScale = 80, Average Cost = 4931.150000, Average Fit = 5189.575000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10119
+Gen = 146, PopScale = 80, Average Cost = 6348.287500, Average Fit = 4048.793685, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10404
+Gen = 147, PopScale = 80, Average Cost = 5033.500000, Average Fit = 5186.962500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10220
+Gen = 148, PopScale = 80, Average Cost = 5537.375000, Average Fit = 4840.100000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10379
+Gen = 149, PopScale = 80, Average Cost = 5124.325000, Average Fit = 5098.112500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10222
+Gen = 150, PopScale = 80, Average Cost = 5060.962500, Average Fit = 5061.737500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10121
+Gen = 151, PopScale = 80, Average Cost = 5461.275000, Average Fit = 4707.837500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10168
+Gen = 152, PopScale = 80, Average Cost = 5428.562500, Average Fit = 4725.737500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10153
+Gen = 153, PopScale = 80, Average Cost = 5311.087500, Average Fit = 4860.987500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10171
+Gen = 154, PopScale = 80, Average Cost = 5576.137500, Average Fit = 4675.925000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10252
+Gen = 155, PopScale = 80, Average Cost = 5097.712500, Average Fit = 5359.750000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10460
+Gen = 156, PopScale = 80, Average Cost = 5561.375000, Average Fit = 4723.275000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10285
+Gen = 157, PopScale = 80, Average Cost = 6382.612500, Average Fit = 3968.835081, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10359
+Gen = 158, PopScale = 80, Average Cost = 4814.212500, Average Fit = 5437.850000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10252
+Gen = 159, PopScale = 80, Average Cost = 6318.325000, Average Fit = 3850.184073, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10174
+Gen = 160, PopScale = 80, Average Cost = 5257.400000, Average Fit = 4839.625000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10095
+Gen = 161, PopScale = 80, Average Cost = 4913.162500, Average Fit = 5226.325000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10138
+Gen = 162, PopScale = 80, Average Cost = 5606.987500, Average Fit = 4662.850000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10270
+Gen = 163, PopScale = 80, Average Cost = 5332.037500, Average Fit = 4825.225000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10156
+Gen = 164, PopScale = 80, Average Cost = 5526.625000, Average Fit = 4636.562500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10162
+Gen = 165, PopScale = 80, Average Cost = 5833.750000, Average Fit = 4294.875000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10127
+Gen = 166, PopScale = 80, Average Cost = 4354.537500, Average Fit = 5745.450000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10098
+Gen = 167, PopScale = 80, Average Cost = 5294.537500, Average Fit = 4812.362500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10105
+Gen = 168, PopScale = 80, Average Cost = 4615.100000, Average Fit = 5645.850000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10261
+Gen = 169, PopScale = 80, Average Cost = 5163.712500, Average Fit = 5115.012500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10279
+Gen = 170, PopScale = 80, Average Cost = 5422.450000, Average Fit = 4738.762500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10160
+Gen = 171, PopScale = 80, Average Cost = 5433.387500, Average Fit = 4729.800000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10162
+Gen = 172, PopScale = 80, Average Cost = 5927.387500, Average Fit = 4432.312500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10361
+Gen = 173, PopScale = 80, Average Cost = 4863.537500, Average Fit = 5250.275000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10112
+Gen = 174, PopScale = 80, Average Cost = 5218.750000, Average Fit = 4932.587500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10150
+Gen = 175, PopScale = 80, Average Cost = 5810.412500, Average Fit = 4364.625000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10174
+Gen = 176, PopScale = 80, Average Cost = 5510.550000, Average Fit = 4687.200000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10197
+Gen = 177, PopScale = 80, Average Cost = 5733.475000, Average Fit = 4446.500000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10179
+Gen = 178, PopScale = 80, Average Cost = 5157.725000, Average Fit = 4998.550000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10155
+Gen = 179, PopScale = 80, Average Cost = 5735.625000, Average Fit = 4376.212500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10110
+Gen = 180, PopScale = 80, Average Cost = 5391.350000, Average Fit = 4786.650000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10177
+Gen = 181, PopScale = 80, Average Cost = 5073.100000, Average Fit = 5013.062500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10084
+Gen = 182, PopScale = 80, Average Cost = 5125.125000, Average Fit = 5334.312500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10462
+Gen = 183, PopScale = 80, Average Cost = 5023.587500, Average Fit = 5099.112500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10121
+Gen = 184, PopScale = 80, Average Cost = 5574.587500, Average Fit = 4652.787500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10227
+Gen = 185, PopScale = 80, Average Cost = 4888.387500, Average Fit = 5516.737500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10407
+Gen = 186, PopScale = 80, Average Cost = 5257.612500, Average Fit = 4744.612500, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 9999
+Gen = 187, PopScale = 80, Average Cost = 5218.137500, Average Fit = 4937.150000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10154
+Gen = 188, PopScale = 80, Average Cost = 5516.075000, Average Fit = 4715.250000, Min Cost = 3126, Current MinCost = 3126, Current worstCost = 10231
+Gen = 189, PopScale = 80, Average Cost = 5969.075000, Average Fit = 4134.925000, Min Cost = 3097, Current MinCost = 3097, Current worstCost = 10104
+Gen = 190, PopScale = 80, Average Cost = 5741.200000, Average Fit = 4379.587500, Min Cost = 3097, Current MinCost = 3126, Current worstCost = 10121
+Gen = 191, PopScale = 80, Average Cost = 5349.075000, Average Fit = 5074.875000, Min Cost = 3097, Current MinCost = 3126, Current worstCost = 10428
+Gen = 192, PopScale = 80, Average Cost = 5614.237500, Average Fit = 4571.725000, Min Cost = 3097, Current MinCost = 3097, Current worstCost = 10187
+Gen = 193, PopScale = 80, Average Cost = 5273.125000, Average Fit = 5027.387500, Min Cost = 3097, Current MinCost = 3097, Current worstCost = 10303
+Gen = 194, PopScale = 80, Average Cost = 5690.975000, Average Fit = 4561.150000, Min Cost = 3097, Current MinCost = 3097, Current worstCost = 10254
+Gen = 195, PopScale = 80, Average Cost = 5327.600000, Average Fit = 4900.825000, Min Cost = 3097, Current MinCost = 3097, Current worstCost = 10230
+Gen = 196, PopScale = 80, Average Cost = 6463.425000, Average Fit = 3936.846871, Min Cost = 3097, Current MinCost = 3097, Current worstCost = 10412
+Gen = 197, PopScale = 80, Average Cost = 5030.600000, Average Fit = 5098.087500, Min Cost = 3097, Current MinCost = 3097, Current worstCost = 10129
+Gen = 198, PopScale = 80, Average Cost = 4747.075000, Average Fit = 5429.012500, Min Cost = 3097, Current MinCost = 3097, Current worstCost = 10177
+Gen = 199, PopScale = 80, Average Cost = 5642.000000, Average Fit = 4550.875000, Min Cost = 3097, Current MinCost = 3097, Current worstCost = 10194
+Gen = 200, PopScale = 80, Average Cost = 5067.162500, Average Fit = 5074.362500, Min Cost = 3097, Current MinCost = 3097, Current worstCost = 10142
+Must Choose: 
+Cost: 3097
+Position: 58 102 114 
+End date/time is: Mon Mar 20 18:40:57 2017
+ 	used time is 12 s 555 ms.

@@ -425,7 +425,7 @@ public:
         // 计算 cost, fitness, 找出最优最差个体
         evalutePopulation();
         everBestIndividual = bestIndividual;
-        //show();
+        show();
         //print_time("epoch end");
         while(gen < MAX_GENERATION) {
             gen++;
@@ -436,12 +436,12 @@ public:
             evalutePopulation();
             // 精英策略
             performEvolution();
-            //show();
+            show();
             if (iteration > 50) {
-                break;
+                //break;
             }
         }
-        //showBestPosition();
+        showBestPosition();
     }
 
     // 输出种群现状
