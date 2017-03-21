@@ -9,8 +9,8 @@
 int POP_SCALE = 80; // 种群规模
 
 double Cmax; // cost -> fitness (fitness = Cmax - cost)
-double Pc = 0.7; // 交叉概率
-double Pm = 0.002; // 变异概率
+//double Pc = 0.7; // 交叉概率
+//double Pm = 0.002; // 变异概率
 
 double c = 1.75; // 线性变换参数
 double m = 1 + log10(MAX_GENERATION); // 指数变换参数
