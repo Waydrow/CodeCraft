@@ -3,6 +3,7 @@ Begin date/time is: Mon Mar 20 22:06:06 2017
 used time is 0 s 0 ms.
 line num is :2270 
 
+
 0   20   0.50, 0.0010
 
 1   14   0.50, 0.0020
@@ -91,4 +92,5 @@ BEST
 
 
 End date/time is: Tue Mar 21 02:31:58 2017
- 	used time is 15952 s 410 ms.
+ 	
+used time is 15952 s 410 ms.

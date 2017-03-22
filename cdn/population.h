@@ -9,8 +9,8 @@
 int POP_SCALE = 80; // 种群规模
 
 double Cmax; // cost -> fitness (fitness = Cmax - cost)
-//double Pc = 0.7; // 交叉概率
-//double Pm = 0.002; // 变异概率
+double Pc = 0.7; // 交叉概率
+double Pm = 0.0012; // 变异概率
 
 double c = 1.75; // 线性变换参数
 double m = 1 + log10(MAX_GENERATION); // 指数变换参数
@@ -93,6 +93,7 @@ class Population {
 
 public:
     vector<Individual> inVec; // 种群容器
+    vector<Individual> parentVec;
     int bestIndex; // 当代最优个体的index
     int worstIndex; // 当代最差个体的index
     Individual bestIndividual;
@@ -107,6 +108,16 @@ public:
             Individual ind = Individual(); // 初始化
             inVec.push_back(ind);
         }
+        /*
+        // 设置变异概率
+        if (nodesNum < 60) {
+            Pc = 0.7;
+            Pm = 0.0012;
+        } else {
+            Pc = 0.8;
+            Pm = 0.007;
+        }
+        */
     }
 
     // 随机选取第一代
@@ -195,7 +206,7 @@ public:
         // 将Cmax设为当代的最大Cost
         Cmax = double(worstIndividual.cost);
 
-         if (gen == 1) {
+        if (gen == 1) {
             everBestIndividual = bestIndividual;
             iteration = 0;
         } else {
@@ -239,6 +250,8 @@ public:
 
     // 选择
     void select() {
+
+        // 轮盘赌
         int i;
         double totalFitness = 0;
         // 计算总 cost, 轮盘赌
@@ -271,6 +284,24 @@ public:
         for (int i = 0; i < POP_SCALE; i++) {
             inVec[i] = tempVec[i];
         }
+
+        /*
+        // 随机联赛选择
+        parentVec = inVec;
+        inVec.clear();
+        int N = 2;
+        while (inVec.size() != unsigned(POP_SCALE)) {
+            for (int i = 0; i < N; i++) {
+                int position1 = uniform_int(0, POP_SCALE);
+                int position2 = uniform_int(0, POP_SCALE);
+                if (parentVec[position1].fitness > parentVec[position2].fitness) {
+                    inVec.push_back(parentVec[position1]);
+                } else {
+                    inVec.push_back(parentVec[position2]);
+                }
+            }
+        }
+        */
     }
 
     // 交叉
@@ -328,6 +359,7 @@ public:
                         bitb[j] = temp;
                     }
                 }
+
                 // 判断服务器数量是否超过消费节点数量, 若超过, 则不交叉
                 if (bita.count() > 0 && bita.count() <= unsigned(clientNum) && bitb.count() > 0 && bitb.count() <= unsigned(clientNum)) {
                     inVec[index[i]].bitIn = bita;
@@ -350,7 +382,7 @@ public:
                     inVec[i].bitIn.flip(j);
                 }
                 // 变异后服务器节点数量大于消费节点数量
-                if (inVec[i].bitIn.count() > unsigned(clientNum) && inVec[i].bitIn.count() > 0) {
+                if (inVec[i].bitIn.count() > unsigned(clientNum) || inVec[i].bitIn.count() == 0) {
                     inVec[i].bitIn.flip(j);
                 }
             }
@@ -386,7 +418,7 @@ public:
         mustChooseVec();
         // 计算 cost, fitness, 找出最优最差个体
         evalutePopulation();
-        //show();
+        show();
         //print_time("epoch end");
         while(gen < MAX_GENERATION) {
             gen++;
@@ -397,12 +429,11 @@ public:
             evalutePopulation();
             // 精英策略
             performEvolution();
-            //show();
+            show();
             if (iteration > 50) {
                 //break;
             }
         }
-        //showBestPosition();
     }
 
     // 输出种群现状
@@ -429,21 +460,5 @@ public:
 
         cout<<endl<<endl;
 */
-    }
-
-    void showBestPosition() {
-        cout << "Must Choose: ";
-        for (unsigned int i = 0; i < mustChoose.size(); i++) {
-            cout <<mustChoose[i]<<" ";
-        }
-        cout <<endl;
-        cout <<"Cost: "<<everBestIndividual.cost<<endl;
-        cout <<"Position: ";
-        for (int i = 0; i < nodesNum; i++) {
-            if (everBestIndividual.bitIn[i] == 1) {
-                cout <<i<<" ";
-            }
-        }
-        cout <<endl;
     }
 };

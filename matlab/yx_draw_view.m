@@ -1,7 +1,7 @@
 % %function [ g ] = read_graph( f_path )
 clc;
 clear;
-f_path='/';
+f_path='../';
 f_name='b.out';
 % ¶ÁÈëÎÄ¼ş
 topo_file = fopen([f_path,f_name], 'r')
