@@ -10,7 +10,7 @@ using namespace std;
 
 
 void deploy_server(char * graph[MAX_EDGE_NUM], int edge_num, char * filename);
-int calCost(bitset<BITSIZE> gene, int mustCal);
+int calCost(bitset<BITSIZE> gene, int mustCal, bool);
 
 
 #endif

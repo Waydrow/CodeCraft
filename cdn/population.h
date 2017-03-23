@@ -108,16 +108,16 @@ public:
             Individual ind = Individual(); // 初始化
             inVec.push_back(ind);
         }
-        /*
+
         // 设置变异概率
-        if (nodesNum < 60) {
+        if (nodesNum > 60) {
             Pc = 0.7;
             Pm = 0.0012;
         } else {
             Pc = 0.8;
             Pm = 0.007;
         }
-        */
+
     }
 
     // 随机选取第一代
@@ -125,14 +125,17 @@ public:
         int i = 0;
         while (i < POP_SCALE) { // 每个体
             // 随机产生服务器的个数
-            int serverNum = uniform_int(1, clientNum);
+            int serverNum = uniform_int(1, clientNum - int(mustChoose.size()));
             //int serverNum;
             set<int> s;
+            for (unsigned int j = 0; j < mustChoose.size(); j++) {
+                s.insert(mustChoose[j]);
+            }
             // 产生 serverNum 个随机数
             while (true) {
                 int r = uniform_int(0, nodesNum-1);
                 s.insert(r);
-                if (s.size() == unsigned(serverNum)) {
+                if (int(s.size()) == serverNum + int(mustChoose.size())) {
                     break;
                 }
             }
@@ -149,7 +152,7 @@ public:
     void calcCostValue() {
         double sumFit = 0;
         for (int i = 0; i < POP_SCALE; i++) {
-            inVec[i].cost = calCost(inVec[i].bitIn, 0);
+            inVec[i].cost = calCost(inVec[i].bitIn, 0, true);
             sumFit += double(inVec[i].cost);
         }
         averageFit = sumFit / (POP_SCALE * 1.0);
@@ -414,8 +417,6 @@ public:
         gen = 1;
         // 生成初代
         generateInitalPopulation();
-        // must choose point
-        mustChooseVec();
         // 计算 cost, fitness, 找出最优最差个体
         evalutePopulation();
         show();

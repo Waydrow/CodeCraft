@@ -1,3 +1,22 @@
+vector<int> curRoad;//寻找路径dfs时记录
+vector<vector<int> >relRoad;//输出答案，记录所有路径
+vector<int>mustChoose;//记录一定需要选择的点的编号
+map<unsigned long long,int>mp;//记录已经计算过的答案
+// 最终需要输出到文件的内容
+char topo_file[20000];
+//..xt:费用流用到全局变量以及结构体
+bool vis[MAXN];
+struct edge {
+    edge *next,*op;
+    int t,c,v,bf;
+} ES[MAXM],*V[MAXN],*cur[MAXN];
+int N,M,S,T,EC=-1;
+int demond[MAXN],sp[MAXN],Prev[MAXN];
+edge *path[MAXN];
+//记录链路信息
+int links[50500][4];
+int consumptionNodes[505][3];
+int myNodes[1000];
 int maxcostflow();
 
 //堆优化dij
@@ -143,17 +162,44 @@ void setCapacity(int st,int ed,int c) {
         }
     }
 }
-//..xt:检测是不是所有消费节点都得到满足,返回未满足的个数
+//..xt:检测是不是所有消费节点都得到满足,返回未满足的个数,并在imNotOk中做标记
+bool imNotOk[MAXN];
 int checkSatisfy(int nodesNum,int clientNum) {
+    memset(imNotOk,0,sizeof(imNotOk));
     int numAdd=1+nodesNum;
     int rel=0;
     for(int i=0; i<clientNum; i++) {
         int u=i+numAdd;
         for(edge *k=V[u]; k; k=k->next) {
-            if((k->t==T)&&(k->c!=0)) rel++;
+            if((k->t==T)&&(k->c!=0)){
+                rel++;
+                imNotOk[u]=true;
+            }
         }
     }
     return rel;
+}
+//..xt:将流需求得不到满足的节点的流操作的费用进行撤销，算法为随机撤销，不考虑费用
+int extraCost;
+int sumCost;
+int getExtraCost(int pos,int flow){
+    if(pos>nodesNum){
+        if(imNotOk[pos]){
+            extraCost+=flow*sumCost;
+        }
+        return flow;
+    }
+    int totalFlow=0;
+    for(edge *i=V[pos];i;i=i->next){
+        if(i->c < i->bf){
+            sumCost+=i->v;
+            int tmpFlow=getExtraCost(i->t,min(flow,i->bf-i->c));
+            sumCost-=i->v;
+            totalFlow+=tmpFlow;
+            i->c+=tmpFlow;
+        }
+    }
+    return totalFlow;
 }
 //..xt:输出结果之前得到真实的relDNA(而不是我们认为这里存在服务器部署)
 bitset<BITSIZE> getBetter() {
@@ -168,15 +214,15 @@ bitset<BITSIZE> getBetter() {
     }
     return rel;
 }
-//long long zong=0;
-//double cishu=0;
 //..xt:给出某个体的评估值(严格使用最小费用最大流评估)
-int calCost(bitset<BITSIZE>gene,int mustCal) {
-    //int ssss=clock();
+long long mynum=0;
+long long mytime=0;
+int calCost(bitset<BITSIZE>gene,int mustCal,bool deleteExtraCost) {
     unsigned long long relHash=getHash(gene);
     if((!mustCal)&&mp.find(relHash)!=mp.end())return mp[relHash];
     buildBasicGraph(nodesNum,linkNum,clientNum);
     int numAdd=1;
+
     for(int i=0; i<nodesNum; i++) {
         if(gene[i]) {
             setCapacity(S,i+numAdd,INF);
@@ -184,12 +230,21 @@ int calCost(bitset<BITSIZE>gene,int mustCal) {
             setCapacity(S,i+numAdd,0);
         }
     }
+    int sst=clock();
     int costRel=maxcostflow();
+    int eed=clock();
     int addit=checkSatisfy(nodesNum,clientNum);
-    //int eeee=clock();
-    //zong+=eeee-ssss;
-    //cishu++;
-    return mp[relHash]=costRel+(gene.count()+addit)*deployCost;
+
+    mynum++;
+    mytime+=(eed-sst);
+    extraCost=0;
+    sumCost=0;
+    if(deleteExtraCost){
+        for(int i=1;i<=nodesNum;i++){
+            getExtraCost(i,INF);
+        }
+    }
+    return mp[relHash]=costRel+(gene.count()+addit)*deployCost-extraCost;
 }
 //..xt:递归寻找路径（用于打印结果）
 int findRoad(int pos,int flow) {
@@ -278,3 +333,4 @@ void getMustChoose(){
         }
     }
 }
+
