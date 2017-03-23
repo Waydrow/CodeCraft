@@ -27,7 +27,10 @@
 *.zip
 *.gz
 
+# video file
+*.mp4
+
 # Make File and Excute File
-/bin/*
-/build/*
+bin/*
+build/*
 
