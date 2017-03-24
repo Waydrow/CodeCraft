@@ -6,6 +6,8 @@
 
 #define MAX_GENERATION 200 // 迭代次数
 
+double ALL_TIME = 85; // 程序最长运行时间限制 单位 s
+
 int POP_SCALE = 80; // 种群规模
 
 double Cmax; // cost -> fitness (fitness = Cmax - cost)
@@ -72,7 +74,9 @@ public:
     bitset<MAX_NODES_NUM> bitIn; // 一个个体
 public:
     // constructor
-    Individual() {}
+    Individual() {
+
+    }
 
     // show this individual's info
     void show() {
@@ -102,21 +106,15 @@ public:
     double averageFit;
     int gen; // 代数
     int iteration;
+    bool overTime;
 public:
     Population() { // constructor
         for (int i = 0; i < POP_SCALE; i++) {
             Individual ind = Individual(); // 初始化
             inVec.push_back(ind);
         }
-
+        overTime = false;
         // 设置变异概率
-        if (nodesNum > 60) {
-            Pc = 0.7;
-            Pm = 0.0012;
-        } else {
-            Pc = 0.8;
-            Pm = 0.007;
-        }
 
     }
 
@@ -152,8 +150,22 @@ public:
     void calcCostValue() {
         double sumFit = 0;
         for (int i = 0; i < POP_SCALE; i++) {
+            //clock_t t1 = clock();
             inVec[i].cost = calCost(inVec[i].bitIn, 0, true);
+            //clock_t t2 = clock();
+            //printf("%.5lf\n", double(t2-t1)/CLOCKS_PER_SEC);
+            //cout << inVec[i].cost << endl;
             sumFit += double(inVec[i].cost);
+
+            if (inVec[i].cost < everBestIndividual.cost) {
+                everBestIndividual = inVec[i];
+            }
+            clock_t finish = clock();
+            double duration = double(finish - start) / CLOCKS_PER_SEC;
+            if (duration > ALL_TIME) {
+                overTime = true;
+                return;
+            }
         }
         averageFit = sumFit / (POP_SCALE * 1.0);
     }
@@ -247,6 +259,7 @@ public:
     // evaluate
     void evalutePopulation() {
         calcCostValue();
+        if (overTime) return;
         findBestAndWorstIndividual();
         calcFitnessValue();
     }
@@ -413,21 +426,26 @@ public:
 
     // 整个进化的全过程
     void epoch() {
+        //clock_t t1 = clock();
         //print_time("epoch begin");
         gen = 1;
         // 生成初代
         generateInitalPopulation();
         // 计算 cost, fitness, 找出最优最差个体
         evalutePopulation();
+
+        //clock_t t2 = clock();
+        //printf("%.5lf\n", double(t2-t1)/80/CLOCKS_PER_SEC);
         show();
         //print_time("epoch end");
-        while(gen < MAX_GENERATION) {
+        while(gen<1) {
             gen++;
             // 通过选择 交叉 变异 生成下一代
             generateNextPopulation();
             mustChooseVec();
             // 评估新的一代
             evalutePopulation();
+            //if (overTime) return;
             // 精英策略
             performEvolution();
             show();

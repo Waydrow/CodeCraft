@@ -3,6 +3,8 @@
 *.lo
 *.o
 *.obj
+
+# Excute Files
 *.exe
 
 # Precompiled Headers
@@ -24,9 +26,12 @@
 *.a
 *.lib
 
-# zip file
+# Zip Files
 *.zip
 *.gz
+
+# Out Files
+*.out
 
 # video file
 *.mp4

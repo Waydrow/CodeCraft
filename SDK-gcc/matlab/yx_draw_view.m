@@ -13,7 +13,7 @@ for i = 1 : 3
 end  %循环结束，此时fid 停留在fgetl最后读的一行末端。
 %读完前7行后，用fscanf继续读
 %a= 'Gen = 67, PopScale = 50, Average Cost = 1995.680000, Average Fit = 335.032384, Min Cost = 1967, Current MinCost = 1967, Current worstCost = 2207';
-A = fscanf(topo_file, '%*s %*c %d%*c %*s %*c %*d%*c %*s %*s %*c %f%*c %*s %*s %*c %*f%*c %*s %*s %*c %d%*c %*s %*s %*c %d%*c %*s %*s %*c %d',[5 200]);
+A = fscanf(topo_file, '%*s %*c %d%*c %*s %*c %*d%*c %*s %*s %*c %f%*c %*s %*s %*c %*f%*c %*s %*s %*c %d%*c %*s %*s %*c %d%*c %*s %*s %*c %d',[5 500]);
 x=A(1,:);
 y=A(2,:);
 minCost=min(A(3,:));

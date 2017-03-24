@@ -37,7 +37,7 @@ int linkNum; // 网络链路数量
 int clientNum; // 消费节点数量
 int deployCost; // 服务器部署成本
 
-
+clock_t start;
 
 string relStr;
 
@@ -54,6 +54,8 @@ string relStr;
 */
 
 void deploy_server(char * topo[MAX_EDGE_NUM], int line_num,char * filename) {
+    start = clock();
+
     sscanf(topo[0], "%d%d%d", &nodesNum, &linkNum, &clientNum);
     sscanf(topo[2], "%d", &deployCost);
     readData(topo,nodesNum,linkNum,clientNum);//将数据从缓存中读到数组中
@@ -105,10 +107,11 @@ void deploy_server(char * topo[MAX_EDGE_NUM], int line_num,char * filename) {
     calCost(rel,1,false);//目的并非计算cost，而是构造网络环境，从而计算有哪些clients未满足
     rel|=getBetter();//将之前relDNA中未布置服务器的点部署服务器，得到真实DNA
     printf("%d\n",calCost(rel,1,false));//对真实DNA，构造网络环境
+
+    cout <<"Server Num: "<<rel.count()<<endl;
     printRel(rel);//打印结果
 
     // 直接调用输出文件的方法输出到指定文件中(ps请注意格式的正确性，如果有解，第一行只有一个数据；第二行为空；第三行开始才是具体的数据，数据之间用一个空格分隔开)
     write_result(relStr.c_str(), filename);
     //printf("%.5lf\n",zong/jishu);
-
 }

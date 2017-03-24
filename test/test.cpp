@@ -19,22 +19,7 @@ void test(int a, int b =1) {
     cout<<b;
 }
 int main() {
-    bitset<10> a,b,c;
-    a.reset();
-    a.set(8);
-    a.set(9);
-    for (int i = 0; i < 10; i++) {
-        cout << a[i];
-    }
-    cout <<endl;
-    b = a<<1;
-    for (int i = 0; i < 10; i++) {
-        cout << b[i];
-    }
-    cout <<endl;
-    c = a^b;
-    for (int i = 0; i < 10; i++) {
-        cout <<c[i];
-    }
-    cout <<endl;
+    double a, b;
+    cin >> a >> b;
+    cout <<min(a, b,1);
 }
