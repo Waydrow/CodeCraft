@@ -1,0 +1,1 @@
+/mnt/hgfs/codecraft/Simplex02/build/CMakeFiles/cdn.dir

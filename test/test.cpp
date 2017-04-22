@@ -18,8 +18,23 @@ int uniform_int(int a, int b) {
 void test(int a, int b =1) {
     cout<<b;
 }
+void array_func(int a[]) {
+    a[0] = 111;
+}
 int main() {
-    double a, b;
-    cin >> a >> b;
-    cout <<min(a, b,1);
+    int a[10];
+    for (int i = 0; i < 10; i++) {
+        a[i] = i;
+    }
+
+    array_func(a);
+    for (int i = 0; i < 10; i++) {
+        cout << a[i] << " ";
+    }
+    cout << endl;
+    int n;
+    cin >> n;
+    int b[n];
+    b[1] = 1;
+    cout << b[1];
 }

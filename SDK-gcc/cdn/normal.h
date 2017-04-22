@@ -218,6 +218,7 @@ bitset<BITSIZE> getBetter() {
 long long mynum=0;
 long long mytime=0;
 int calCost(bitset<BITSIZE>gene,int mustCal,bool deleteExtraCost) {
+    while(1)puts("ggg");
     unsigned long long relHash=getHash(gene);
     if((!mustCal)&&mp.find(relHash)!=mp.end())return mp[relHash];
     buildBasicGraph(nodesNum,linkNum,clientNum);
@@ -232,6 +233,7 @@ int calCost(bitset<BITSIZE>gene,int mustCal,bool deleteExtraCost) {
     }
     int sst=clock();
     int costRel=maxcostflow();
+    cout <<"Normal Cost: "<<costRel<<endl;
     int eed=clock();
     int addit=checkSatisfy(nodesNum,clientNum);
 
