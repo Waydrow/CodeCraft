@@ -2,15 +2,13 @@
 #include "lib/lib_time.h"
 #include <cmath>
 
-#define MAX_NODES_NUM 1000 // 最大网络节点数量
+#define MAX_NODES_NUM 1300 // 最大网络节点数量
 
 int MAX_GENERATION; // 迭代次数
 
-double ALL_TIME = 86; // 程序最长运行时间限制 单位 s
+double ALL_TIME = 87; // 程序最长运行时间限制 单位 s
 
 int POP_SCALE; // 种群规模
-
-double Cmax; // cost -> fitness (fitness = Cmax - cost)
 
 int N_POP = 100; // 记忆前 N 个当前种群个体
 
@@ -20,52 +18,16 @@ double Pc = 0.7; // 交叉概率
 // 0.0012
 double Pm = 0.0012; // 变异概率
 
+double Ps = 0.8;
+
+const double A = 9.903438;
+double Pcmax = 0.8;
+double Pcmin = 0.7;
+double Pmmax = 0.0014;
+double Pmmin = 0.0007;
+
 double c = 1.75; // 线性变换参数
 double m; // 指数变换参数
-
-// 全局时间种子标志
-int g_srand = 1;
-
-// get a real random number in [a, b]
-inline double get_random_real(double a, double b) {
-    if (g_srand) {
-        g_srand = 0;
-        srand((unsigned int)time(NULL));
-    }
-    return (double)rand() / ((double)RAND_MAX / (b - a)) + a;
-}
-
-// get a int random number in [a, b]
-inline int get_random_int(int a, int b) {
-    if (g_srand) {
-        g_srand = 0;
-        srand((unsigned int)time(NULL));
-    }
-
-    return (int)((double)rand() / ((RAND_MAX + 1.0) / (b - a + 1.0)) + a);
-}
-
-// 个体类
-class Individual {
-
-public:
-    int cost; // 花费
-    double fitness; // 适应度
-    bitset<MAX_NODES_NUM> bitIn; // 一个个体
-public:
-    // constructor
-    Individual() {
-
-    }
-
-    // show this individual's info
-    void show() {
-        for (int i = 0; i < nodesNum; i++) {
-            cout << bitIn[i] << " ";
-        }
-        cout << endl << "COST: " << cost << " FITNESS: "<< fitness << "  Server Num: " << bitIn.count() << endl;
-    }
-};
 
 // 自定义比较函数
 inline bool compByCost(Individual a, Individual b) {
@@ -93,62 +55,67 @@ public:
     double maxFit;
     int gen; // 代数
     int iteration;
+    vector<int> directVec;
+    vector<int> notChooseVec;
     MinCostFlowSolution *mcf;
 
-    ~Population() {
-        // cout << "123" << endl;
-    }
+    ~Population() {}
 public:
     Population(MinCostFlowSolution *mcfs) { // constructor
         mcf = mcfs;
-
-        if (nodesNum < 200) { // 对于初级 case
-            POP_SCALE = 200;
-            MAX_GENERATION = 300;
-            Pm = 0.0008;
-            // Pm = 0.001;
-            N_POP = 100;
-            L = 1.5;
-        } else if (nodesNum < 500) { // 对于中级 case
-            POP_SCALE = 400;
-            MAX_GENERATION = 300;
-            Pm = 0.0008;
-            N_POP = 100;
+        if (nodesNum < 800) {
+            POP_SCALE = 300;
+            MAX_GENERATION = 1000;
+            Pm = 0.001;
+            N_POP = 125;
             L = 1.4;
-        } else { // 对于高级 case
-            POP_SCALE = 200;
-            MAX_GENERATION = 300;
-            Pm = 0.0002;
+        } else {
+            POP_SCALE = 78;
+            MAX_GENERATION = 1000;
+            Pm = 0.0008;
+            N_POP = 19;
             L = 1.8;
         }
+        // MAX_GENERATION = 2;
         // 设置指数变换参数
         m = 1 + log10(MAX_GENERATION);
-        //printf("%d %d %lf\n", POP_SCALE, MAX_GENERATION, m);
-
-
         for (int i = 0; i < POP_SCALE; i++) {
             Individual ind = Individual(); // 初始化
             inVec.push_back(ind);
         }
+
+        directVec = mcf->getMustChoose();
+        //notChooseVec = mcf->getNotChoose();
+        //sort(notChooseVec.begin(), notChooseVec.end());
     }
 
     // 随机选取第一代
     void generateInitalPopulation() {
         int i = 0;
-        while (i < POP_SCALE) { // 每个体
+        while (i < POP_SCALE / 2) { // 每个体
             // 随机产生服务器的个数
-            int serverNum = get_random_int(1, clientNum - int(mustChoose.size()));
-            //int serverNum;
+            int directSize = directVec.size();
+            int serverNum = get_random_int(1, clientNum - directSize);
             set<int> s;
-            for (unsigned int j = 0; j < mustChoose.size(); j++) {
-                s.insert(mustChoose[j]);
+            for (int j = 0; j < directSize; j++) {
+                s.insert(directVec[j]);
             }
+            /*
+            vector<int> nodesTmp;
+            vector<int>::iterator itt = notChooseVec.begin();
+            for (int j = 0; j < nodesNum; j++) {
+                if (j == (*itt)) {
+                    itt++;
+                    continue;
+                }
+                nodesTmp.push_back(j);
+            }
+            */
             // 产生 serverNum 个随机数
             while (true) {
-                int r = get_random_int(0, nodesNum-1);
-                //if (notChoose.find(r) != notChoose.end()) continue;
+                int r = get_random_int(0, nodesNum - 1);
                 s.insert(r);
-                if (int(s.size()) == serverNum + int(mustChoose.size())) {
+                if (int(s.size()) == serverNum + directSize) {
                     break;
                 }
             }
@@ -161,23 +128,15 @@ public:
         }
     }
 
-        // 计算 cost, 与适应度线性变换对应
-    void calcCostValueForLinear() {
-        for (int i = 0; i < POP_SCALE; i++) {
-
-            pair<pair<long long,long long>, bitset<BITSIZE> > pair1 = mcf->CalCost(inVec[i].bitIn, 0, true);
-            inVec[i].cost = pair1.first.first;
-
-            if (inVec[i].cost < everBestIndividual.cost) {
-                everBestIndividual = inVec[i];
-            }
-            if (gen <= 60 && nodesNum > 1000){
-                inVec[i].bitIn = pair1.second;
-                inVec[i].cost = pair1.first.second;
+    void generateInitialBetter() {
+        for (int i = POP_SCALE / 2; i < POP_SCALE; i++) {
+            for (int j = 0; j < nodesNum; j++) {
+                double pp = get_random_real(0, 1);
+                if (pp < nodesP[j])
+                    inVec[i].bitIn.set(j);
             }
         }
     }
-
     // 计算 cost, 与适应度指数变换对应
     void calcCostValueForExp() {
         double sumFit = 0;
@@ -191,7 +150,8 @@ public:
             if (inVec[i].cost < everBestIndividual.cost) {
                 everBestIndividual = inVec[i];
             }
-            if (gen <= 60 && nodesNum > 1000){
+
+            if ((nodesNum < 800 && gen <= 35) || (nodesNum > 1000 && gen <= 65)) {
                 inVec[i].bitIn = pair1.second;
                 inVec[i].cost = pair1.first.second;
             }
@@ -199,56 +159,24 @@ public:
         averageFit = sumFit / (POP_SCALE * 1.0);
     }
 
-        // 计算 适应度, 线性变换
-    void calcFitnessValueLinear() {
-
-        double temp;
-        double sumFit = 0;
-        maxFit = 0;
-        minFit = Cmax - double(inVec[0].cost);
-        for (int i = 0; i < POP_SCALE; i++) {
-            temp = Cmax - double(inVec[i].cost);
-            if (temp < minFit) {
-                minFit = temp;
-            }
-            if (temp > maxFit) {
-                maxFit = temp;
-            }
-            sumFit += temp;
-            inVec[i].fitness = temp;
-        }
-        // 计算当代适应度的均值
-        averageFit = sumFit / (POP_SCALE * 1.0);
-
-        /* 对适应度做线性尺度变换
-            F' = a * F + b
-            a = (c - 1) * F_avg / (F_max - F_avg);
-            b = (F_max - c * F_avg) * F_avg / (F_max - F_avg)
-        // --------------------------------------------------
-        */
-        double a_, b_;
-        if (minFit > (c * averageFit - maxFit) / (c - 1)) {
-            a_ = (c - 1) * averageFit / (maxFit - averageFit);
-            b_ = ((maxFit - c * averageFit) * averageFit) / (maxFit - averageFit);
-        } else {
-            a_ = averageFit / (averageFit - minFit);
-            b_ = minFit * averageFit / (minFit - averageFit);
-        }
-
-        for (int i = 0; i < POP_SCALE; i++) {
-            temp = a_ * inVec[i].fitness + b_;
-            inVec[i].fitness = temp;
-        }
-    }
-
-
     // 计算适应度, 指数变换
     void calcFitnessValueExp() {
         // 指数
         double aa = pow(gen, 1 / m) / (averageFit + 0.001);
+        maxFit = 0;
+        minFit = 1e10;
+        double sumF = 0;
         for (int i = 0; i < POP_SCALE; i++) {
             inVec[i].fitness = exp(-1 * aa * double(inVec[i].cost));
+            sumF += inVec[i].fitness;
+            if (inVec[i].fitness < minFit) {
+                minFit = inVec[i].fitness;
+            }
+            if (inVec[i].fitness > maxFit) {
+                maxFit = inVec[i].fitness;
+            }
         }
+        averageFit = sumF / (POP_SCALE * 1.0);
     }
 
     // find best and worst individual of this generation
@@ -269,9 +197,6 @@ public:
             }
         }
 
-        // 将Cmax设为当代的最大Cost, 适应度线性变换所用
-        Cmax = double(worstIndividual.cost);
-
         if (gen == 1) {
             everBestIndividual = bestIndividual;
             iteration = 0;
@@ -291,32 +216,30 @@ public:
     }
 
     // Must Choose
-    void mustChooseVec() {
-        //return;
-        int num = mustChoose.size();
+    void directVecChoose() {
+        int num = directVec.size();
         for (int i = 0; i < POP_SCALE; i++) {
             for (int j = 0; j < num; j++) {
-                inVec[i].bitIn.set(mustChoose[j]);
+                inVec[i].bitIn.set(directVec[j]);
             }
         }
-        /*
-        for (int i = 0; i < POP_SCALE; i++) {
-            set<int>::iterator it;
-            for (it = notChoose.begin(); it != notChoose.end(); it++) {
-                inVec[i].bitIn.reset(*it);
-            }
-        }
-        */
     }
 
+    // not choose
+    void notChoose() {
+        int num = notChooseVec.size();
+        for (int i = 0; i < POP_SCALE; i++) {
+            for (int j = 0; j < num; j++) {
+                inVec[i].bitIn.reset(notChooseVec[j]);
+            }
+        }
+    }
 
     // evaluate
     void evalutePopulation() {
-        //calcCostValueForExp();
-        calcCostValueForLinear();
+        calcCostValueForExp();
         findBestAndWorstIndividual();
-        //calcFitnessValueExp();
-        calcFitnessValueLinear();
+        calcFitnessValueExp();
     }
 
     // 轮盘赌
@@ -375,6 +298,53 @@ public:
         }
     }
 
+    void crossOverTwoPoint() {
+        int i, j;
+        vector<int> index;
+        int point, point2, temp;
+        double p;
+        for (i = 0; i < POP_SCALE; i++) {
+            index.push_back(i);
+        }
+        // 生成不重复随机数组
+        for (i = 0; i < POP_SCALE; i++) {
+            point = get_random_int(0, POP_SCALE - 1 - i);
+            temp = index[i];
+            index[i] = index[point + i];
+            index[point + i] = temp;
+        }
+        bitset<BITSIZE> bita;
+        bitset<BITSIZE> bitb;
+
+        for (i = 0; i < POP_SCALE - 1; i += 2) {
+            p = get_random_real(0, 1);
+            // 若小于交叉概率, 则进行交叉
+            if (p < Pc) {
+                point = get_random_int(1, nodesNum-2);
+                point2 = get_random_int(1, nodesNum-1);
+                int lower = min(point, point2);
+                int upper = max(point, point2);
+                bita = inVec[index[i]].bitIn;
+                bitb = inVec[index[i+1]].bitIn;
+                for (j = 0; j < lower; j++) {
+                    temp = bita[j];
+                    bita[j] = bitb[j];
+                    bitb[j] = temp;
+                }
+                for (j = upper; j < nodesNum; j++) {
+                    temp = bita[j];
+                    bita[j] = bitb[j];
+                    bitb[j] = temp;
+                }
+                // 判断服务器数量是否超过消费节点数量, 若超过, 则不交叉
+                if (bita.count() <= unsigned(clientNum) && bitb.count() <= unsigned(clientNum)) {
+                    inVec[index[i]].bitIn = bita;
+                    inVec[index[i+1]].bitIn = bitb;
+                }
+            }
+        }
+    }
+
     // 均匀交叉
     void crossOverUniform() {
         int i, j;
@@ -396,6 +366,14 @@ public:
 
         // Uniform Crossover
         for (i = 0; i < POP_SCALE - 1; i += 2) {
+/*
+            double biggerFit = max(inVec[index[i]].fitness, inVec[index[i+1]].fitness);
+            if (biggerFit >= averageFit) {
+                Pc = Pcmin + (Pcmax - Pcmin) / (1 + exp(A * (2 * (biggerFit - averageFit) / (maxFit - averageFit))));
+            } else {
+                Pc = Pcmax;
+            }
+*/
             p = get_random_real(0, 1);
             if (p < Pc) {
                 bita = inVec[index[i]].bitIn;
@@ -408,7 +386,6 @@ public:
                         bitb[j] = temp;
                     }
                 }
-
                 // 判断服务器数量是否超过消费节点数量, 若超过, 则不交叉
                 if (bita.count() > 0 && bita.count() <= unsigned(clientNum) && bitb.count() > 0 && bitb.count() <= unsigned(clientNum)) {
                     inVec[index[i]].bitIn = bita;
@@ -441,7 +418,7 @@ public:
             p = get_random_real(0, 1);
             // 若小于交叉概率, 则进行交叉
             if (p < Pc) {
-                point = get_random_int(0, nodesNum - 2) + 1;
+                point = get_random_int(1, nodesNum-2);
                 bita = inVec[index[i]].bitIn;
                 bitb = inVec[index[i+1]].bitIn;
                 for (j = point; j < nodesNum; j++) {
@@ -458,11 +435,60 @@ public:
         }
     }
 
+    void crossOverFromBetter() {
+        bitset<BITSIZE> bita, bitb;
+        for (int i = 0; i < POP_SCALE; i++) {
+            int pos = 0;
+            int pos1 = get_random_int(0, POP_SCALE-1);
+            int pos2 = get_random_int(0, POP_SCALE-1);
+            if (inVec[pos1].cost < inVec[pos2].cost) {
+                pos = pos1;
+            } else {
+                pos = pos2;
+            }
+
+            int poss = 0;
+            int pos3 = get_random_int(0, POP_SCALE-1);
+            int pos4 = get_random_int(0, POP_SCALE-1);
+            if (inVec[pos3].cost < inVec[pos4].cost) {
+                poss = pos3;
+            } else {
+                poss = pos4;
+            }
+
+            double p = get_random_real(0, 1);
+            if (p < Pc) {
+                bita = inVec[pos].bitIn;
+                bitb = inVec[pos4].bitIn;
+                for (int j = 0; j < nodesNum; j++) {
+                    int t = get_random_int(0, 1);
+                    if (t == 1) {
+                        int temp = bita[j];
+                        bita[j] = bitb[j];
+                        bitb[j] = temp;
+                    }
+                }
+                // 判断服务器数量是否超过消费节点数量, 若超过, 则不交叉
+                if (bita.count() > 0 && bita.count() <= unsigned(clientNum) && bitb.count() > 0 && bitb.count() <= unsigned(clientNum)) {
+                    inVec[pos].bitIn = bita;
+                    inVec[poss].bitIn = bitb;
+                }
+            }
+        }
+    }
+
     // 均匀变异
     void mutationUniform() {
         double p;
         // bit mutation
         for (int i = 0; i < POP_SCALE; i++) {
+/*
+            if (inVec[i].fitness >= averageFit) {
+                Pm = Pmmin + (Pmmax - Pmmin) / (1 + exp(A * (2 * (inVec[i].fitness - averageFit) / (maxFit - averageFit))));
+            } else {
+                Pm = Pmmax;
+            }
+*/
             for (int j = 0; j < nodesNum; j++) {
                 p = get_random_real(0, 1);
                 // mutation
@@ -503,7 +529,6 @@ public:
         for (unsigned int i = nVec.size() - 1; i > nVec.size() - N_POP - 1; i--) {
             nVec.pop_back();
         }
-
     }
 
     // 小生境遗传
@@ -517,14 +542,11 @@ public:
             for (int j = i + 1; j < currentSize; j++) {
                 double difCount = sqrt(double((mVec[i].bitIn ^ mVec[j].bitIn).count()));
                 if (difCount < L) {
-
                     if (mVec[i].cost < mVec[j].cost) {
                         mVec[j].fitness = 1e-10;
                     } else {
                         mVec[i].fitness = 1e-10;
                     }
-
-                    //break;
                 }
             }
         }
@@ -535,46 +557,66 @@ public:
         }
     }
 
+    void swapGen() {
+        for (int i = 0; i < POP_SCALE; i++) {
+            double pp = get_random_real(0, 1);
+            if (pp < Ps) {
+                int n = 1;
+                while(n--) {
+                    int pos1 = get_random_int(0, nodesNum-1);
+                    //int pos2 = get_random_int(0, nodesNum-1);
+                    int pos2;
+                    if (pos1 == nodesNum-1)
+                        pos2 = pos1 - 1;
+                    else
+                        pos2 = pos1 + 1;
+                    int t = inVec[i].bitIn[pos1];
+                    inVec[i].bitIn[pos1] = inVec[i].bitIn[pos2];
+                    inVec[i].bitIn[pos2] = t;
+                }
+            }
+        }
+    }
+
     // 产生新的一代
     void generateNextPopulation() {
-        //selectByLeague();
-        selectByRoulette();
-        //crossOverUniform();
-        crossOverOnePoint();
-        //mutationUniform();
-        mutationOnePoint();
+        selectByLeague();
+        // selectByRoulette();
+        // crossOverTwoPoint();
+        crossOverUniform();
+        // crossOverOnePoint();
+        // crossOverFromBetter();
+        mutationUniform();
+        // mutationOnePoint();
+        // swapGen();
     }
 
     // 整个进化的全过程
     void epoch() {
-
         gen = 1;
         // 生成初代
         generateInitalPopulation();
+        generateInitialBetter();
         // 计算 cost, fitness, 找出最优最差个体
         evalutePopulation();
-        if (nodesNum > 100) { // 小case 不使用小生境
-            memoryCurrentPopulation();
-        }
-        //sort(inVec.begin(), inVec.end(), compByFitness);
-        show();
+        memoryCurrentPopulation();
+        // show();
         while(gen < MAX_GENERATION) {
             gen++;
             // 通过选择 交叉 变异 生成下一代
             generateNextPopulation();
-            mustChooseVec();
+            // must choose direct node
+            if (nodesNum > 1000) {
+                directVecChoose();
+                //notChoose();
+            }
             // 评估新的一代
             evalutePopulation();
-            if (nodesNum > 100) { // 小case 不使用小生境
-                nicheGA();
-                memoryCurrentPopulation();
-            }
-
+            nicheGA();
+            memoryCurrentPopulation();
             // 精英策略
             performEvolution();
-            //sort(inVec.begin(), inVec.end(), compByFitness);
-            show();
-
+            // show();
             double duration = double(clock() - start) / CLOCKS_PER_SEC;
             if (duration > ALL_TIME) {
                 return;
@@ -596,7 +638,9 @@ public:
 
 /*
         vector<Individual>::iterator it;
+        i = 0;
         for (it = inVec.begin(); it != inVec.end(); it++) {
+            printf("%d:  ", i++);
             (*it).show();
         }
 

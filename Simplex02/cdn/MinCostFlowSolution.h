@@ -419,7 +419,6 @@ inline void MinCostFlowSolution::ReadData(char *topo[], int nodesNums, int linkN
     //getClassified();
 }
 
-
 inline void MinCostFlowSolution::CalCost(Individual &gene, int mustCal,bool deleteExtraCost) {
 
     unsigned long long relHash=getHash(gene.gen);

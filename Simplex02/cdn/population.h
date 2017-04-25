@@ -78,23 +78,20 @@ public:
     Population(MinCostFlowSolution *mcfs) { // constructor
         mcf = mcfs;
 
-        if (nodesNum < 200) { // 对于初级 case
-            POP_SCALE = 500;
-            MAX_GENERATION = 100;
-            Pm = 0.0012;
-        } else if (nodesNum < 500) { // 对于中级 case
-            POP_SCALE = 200;
+        if (nodesNum < 800) {
+            POP_SCALE = 300;
             MAX_GENERATION = 300;
             Pm = 0.0005;
-            N_POP = 100;
-            L = 1.84;
-        } else { // 对于高级 case
-            POP_SCALE = 200;
+            N_POP = 150;
+            L = 1.4;
+        } else {
+            POP_SCALE = 100;
             MAX_GENERATION = 300;
-            Pm = 0.0002;
-            L = 2.5;
+            Pm = 0.0008;
+            N_POP = 60;
+            L = 1.8;
         }
-        MAX_GENERATION = 20;
+        // MAX_GENERATION = 2;
         // 设置指数变换参数
         m = 1 + log10(MAX_GENERATION);
         //printf("%d %d %lf\n", POP_SCALE, MAX_GENERATION, m);
@@ -133,6 +130,18 @@ public:
                 inVec[i].gen[*it] = level;
             }
             i++;
+        }
+    }
+
+    void generateInitialBetter() {
+        for (int i = 0; i < POP_SCALE; i++) {
+            for (int j = 0; j < nodesNum; j++) {
+                double pp = get_random_real(0, 1);
+                if (pp < nodesP[j]) {
+                    int level = get_random_int(1, serverLevel);
+                    inVec[i].gen[j] = level;
+                }
+            }
         }
     }
 
@@ -464,12 +473,11 @@ public:
 
         gen = 1;
         // 生成初代
-        generateInitalPopulation();
+        // generateInitalPopulation();
+        generateInitialBetter();
         // 计算 cost, fitness, 找出最优最差个体
         evalutePopulation();
-        if (nodesNum > 200) { // 小case 不使用小生境
-            memoryCurrentPopulation();
-        }
+        memoryCurrentPopulation();
         show();
         while(gen < MAX_GENERATION) {
             gen++;
@@ -478,10 +486,8 @@ public:
             mustChooseVec();
             // 评估新的一代
             evalutePopulation();
-            if (nodesNum > 200) { // 小case 不使用小生境
-                nicheGA();
-                memoryCurrentPopulation();
-            }
+            // nicheGA();
+            // memoryCurrentPopulation();
 
             // 精英策略
             performEvolution();

@@ -74,14 +74,15 @@ void deploy_server(char * topo[MAX_EDGE_NUM], int line_num, char * filename) {
     //mcf->getNotChoose(notChoose);
 
     readData(topo,nodesNum,linkNum,clientNum);//将数据从缓存中读到数组中
+    initNodesP();
     buildBasicGraph();
     //getMustChoose();//挑选出必须选择的直接相连的点
 
     Population p = Population(mcf);
     p.epoch();
 
-    // Individual rel = p.everBestIndividual;//取得最优个体DNA
-    Individual rel = SA(p.everBestIndividual, mcf);
+    Individual rel = p.everBestIndividual;//取得最优个体DNA
+    // Individual rel = SA(p.everBestIndividual, mcf);
     calCost(rel,1,false);//目的并非计算cost，而是构造网络环境，从而计算有哪些clients未满足
     getBetter(rel);//将之前relDNA中未布置服务器的点部署服务器，得到真实DNA
     printf("Cost: %d\n", calCost(rel,1,false));//对真实DNA，构造网络环境

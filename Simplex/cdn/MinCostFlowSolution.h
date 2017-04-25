@@ -17,7 +17,9 @@
 #include <set>
 
 #define BITSIZE 1300
+#define MAXLEVEL (serverLevel - 1)
 using namespace std;
+
 struct sst {
     int id,dis;
     sst(int a,int b) {
@@ -36,6 +38,9 @@ struct eedge {
     eedge *next;
 };
 
+bool cmpDecrease(int a,int b){
+    return a>b;
+}
 
 class MinCostFlowSolution {
 
@@ -49,15 +54,19 @@ public:
 
     void getArcFlow( double * F , int* nms = NULL ,
                   const int strt = 0 , int stp = Inf<int>() );
-
+    inline void getDirectNum();
     inline int getArcStartNode( const int i );
-
+    inline const bool * getFirstMap();
     inline int getArcEndNode( const int i );
-
+    inline void differNodesAndClient(int num);
     void getArcsCost( double * Costv , const int * nms = NULL ,
                    const int strt = 0 , int stp = Inf<int>() );
-
+    inline pair<pair<long long,long long>,bitset<BITSIZE> > CalCost2(bitset<BITSIZE> gens, int mustCal,bool deleteExtraCost);
     inline double getArcCost( const int i );
+    inline void LoadDMX2( bitset<BITSIZE> &gens);
+    inline vector<int> getLastSolution(bitset<BITSIZE>gens);
+    inline vector<int> getMustChoose();
+
     template <typename T>
     class Inf {
     public:
@@ -67,7 +76,7 @@ public:
         }
     };
 
-    MinCostFlowSolution( const int nmx = 0 , const int mmx = 0 ) {
+    MinCostFlowSolution( const int nmx = 0 , const int mmx = 0 ) {//gouzao
         sumtime=0;
         times=0;
         n = nmx;
@@ -88,7 +97,7 @@ public:
         else
             n = m = 0;
     }
-//    void getNotChoose(set<int>&notChoose);
+    inline vector<int> getNotChoose();
     inline void LoadDMX( bitset<BITSIZE> &gens);
     inline unsigned long long getHash(bitset<BITSIZE>&gene);
     inline void ReadData(char *topo[], int nodesNum, int linkNum, int clientNum);
@@ -151,13 +160,19 @@ protected:
     vector<int> roadCost[BITSIZE];
     vector<int> roadBanw[BITSIZE];
     //vector<int,double> myVotes[BITSIZE];
+    bool nodesInFirstMap[BITSIZE];
+    bool clientsInFirstMap[BITSIZE];
     int serverLevel;//服务器类型数量
     int n;      //点数
     bool imHung[BITSIZE];
+    bool inMustChoose[BITSIZE];
     int m;
+    int myClient[BITSIZE];
     int restCost;
     int sumCost;
     double mmmin;
+    vector<int> mustChoose;
+    vector<int> notChoose;
     vector<int> classf[BITSIZE][5];
     int ednum;
     eedge *aadj[1000010];
@@ -350,6 +365,54 @@ inline void MinCostFlowSolution::buidShortestMap() {
 
 }
 
+inline const bool * MinCostFlowSolution::getFirstMap(){
+    memset(nodesInFirstMap,0,sizeof(nodesInFirstMap));
+    memset(clientsInFirstMap,0,sizeof(clientsInFirstMap));
+    buidShortestMap();
+    differNodesAndClient(nodesNum+1);
+    return nodesInFirstMap;
+}
+
+inline void MinCostFlowSolution::differNodesAndClient(int num){
+  num--;
+  for(int i=0; i<nnn; i++) {
+      dis[i]=inf;
+  }
+  priority_queue<sst,vector<sst>,cmp>q;
+  sst tmp;
+  dis[num]=0;
+  q.push(sst(num,0));
+  while(!q.empty()) {
+      tmp=q.top();
+      q.pop();
+      for(eedge *p=aadj[tmp.id]; p; p=p->next) {
+          if(dis[p->id]>p->w+dis[tmp.id]) {
+              dis[p->id]=p->w+dis[tmp.id];
+              q.push(sst(p->id,dis[p->id]));
+          }
+      }
+  }
+  int ddis[2000];
+  for(int i=0;i<nodesNum+clientNum;i++){
+      ddis[i]=dis[i];
+  }
+  sort(ddis,ddis+nodesNum);
+  sort(ddis+nodesNum,ddis+nodesNum+clientNum);
+  int pfnodes=ddis[nodesNum/2];
+  int pfclients=ddis[nodesNum+clientNum/2];
+  for(int i=0;i<nodesNum;i++){
+      if(dis[i]<=pfnodes){
+          nodesInFirstMap[i]=true;
+      }
+  }
+  for(int i=nodesNum;i<nodesNum+clientNum;i++){
+      if(dis[i]<=pfclients){
+          clientsInFirstMap[i - nodesNum]=true;
+      }
+  }
+}
+
+
 inline void MinCostFlowSolution::getClassified() {
     buidShortestMap();
     for(int i=nodesNum+1; i<=nodesNum+clientNum; i++) {
@@ -392,6 +455,7 @@ inline unsigned long long MinCostFlowSolution::getHash(bitset<BITSIZE>&gene) {
 }
 
 inline void MinCostFlowSolution::ReadData(char *topo[], int nodesNums, int linkNums, int clientNums) {
+  memset(myClient,-1,sizeof(myClient));
   serverLevel=0;
   nodesNum = nodesNums;
   linkNum = linkNums;
@@ -401,10 +465,10 @@ inline void MinCostFlowSolution::ReadData(char *topo[], int nodesNums, int linkN
   int tmpa,tmpb,tmpc,tmpd;
   int linksI=0,consumptionNodesI=0;
   for(int i=0;;i++){
-      if(consumptionNodesI==clientNum){
+      if(consumptionNodesI==clientNum) {
           break;
       }
-      if(topo[i][0]=='\r'||topo[i][0]=='\n'){
+      if(topo[i][0]=='\r'||topo[i][0]=='\n') {
           datap = dataProperty(datap + 1);
           continue;
       }
@@ -441,6 +505,7 @@ inline void MinCostFlowSolution::ReadData(char *topo[], int nodesNums, int linkN
           consumptionNodes[consumptionNodesI][1]=tmpb;
           consumptionNodes[consumptionNodesI][2]=tmpc;
           myNodes[tmpa]=tmpb;
+          myClient[tmpb]=tmpa;
           allNeed+=tmpc;
           consumptionNodesI++;
       }
@@ -491,13 +556,16 @@ inline pair<pair<long long,long long>,bitset<BITSIZE> > MinCostFlowSolution::Cal
             sum += c[i] * x[i];
         }
         if(getArcStartNode(i)==1 && getArcEndNode(i)>nodesNum+1 && x[i]>0) {
+            int initialLevel=-1;
             if(gens[ myNodes[eed-nodesNum-2] ]){
-                while(true){
-                    puts("adderror1");
-                }
+                initialLevel=MAXLEVEL;
             }
             for(int w=0;w<serverLevel;w++){
-                if(serverInfo[w][0]>=x[i]){
+                if(initialLevel>=0&&serverInfo[w][0]-serverInfo[initialLevel][0]>=x[i]){
+                    sum+=serverInfo[w][1]-serverInfo[initialLevel][1];
+                    break;
+                }
+                if(initialLevel<0 && serverInfo[w][0]>=x[i]){
                     sum+=serverInfo[w][1];
                     sum+=nodesMoney[ myNodes[eed-nodesNum-2] ];
                     break;
@@ -583,6 +651,140 @@ inline pair<pair<long long,long long>,bitset<BITSIZE> > MinCostFlowSolution::Cal
     return make_pair(make_pair((long long)sum,tmpsum),gens);
 }
 
+
+inline pair<pair<long long,long long>,bitset<BITSIZE> > MinCostFlowSolution::CalCost2(bitset<BITSIZE> gens, int mustCal,bool deleteExtraCost) {
+
+    unsigned long long relHash=getHash(gens);
+    if((!mustCal)&&mp.find(relHash)!=mp.end())return make_pair(make_pair(mp[relHash],mp[relHash]),gens);
+    LoadDMX2(gens);
+    int a=clock();
+    solutionMinCostFlow();
+    double b=clock()-a;
+    sumtime+=b/CLOCKS_PER_SEC;
+    times++;
+    double * x = new double[ m ];
+    double * c = new double[ m ];
+    getArcsCost(c);
+    getArcFlow(x);
+    int myflow[BITSIZE];
+    memset(myflow,0,sizeof(myflow));
+    double sum = 0;
+
+    int myOutSum[BITSIZE];
+    int myInSum[BITSIZE];
+    memset(myOutSum,0,sizeof(myOutSum));
+    memset(myInSum,0,sizeof(myInSum));
+    for( int i = 0 ; i < m ; i++ ) {
+        int sst=getArcStartNode(i);
+        int eed=getArcEndNode(i);
+        if(sst>1&&sst<nodesNum+2){
+            myflow[sst-2]+=x[i];
+            if(eed>1&&eed<nodesNum+2){
+                myflow[eed-2]-=x[i];
+            }
+        }
+        if(eed>nodesNum+1) {
+            myInSum[eed-nodesNum-2] += x[i];
+        }
+        if(sst>1&&sst<nodesNum+2&&gens[sst-2]) {
+            myOutSum[sst-2] += x[i];
+        }
+        if (c[i] != 4e7) {
+            sum += c[i] * x[i];
+        }
+        if(getArcStartNode(i)==1 && getArcEndNode(i)>nodesNum+1 && x[i]>0) {
+            if(gens[ myNodes[eed-nodesNum-2] ]){
+                while(true){
+                    puts("adderror1");
+                }
+            }
+            for(int w=0;w<serverLevel;w++){
+                if(serverInfo[w][0]>=x[i]){
+                    sum+=serverInfo[w][1];
+                    sum+=nodesMoney[ myNodes[eed-nodesNum-2] ];
+                    break;
+                }
+                if(w==serverLevel-1){
+                    while(true){
+                        puts("adderror2");
+                    }
+                }
+            }
+        }
+
+    }
+    for(int i=0;i<nodesNum;i++){
+        while(myflow[i]<0 || myflow[i]>serverInfo[serverLevel-1][0]){
+            puts("aaaflowadderror");
+        }
+        if(gens[i]){
+            sum+=nodesMoney[i];
+            for(int w=0;w<serverLevel;w++){
+                if(serverInfo[w][0]>=myflow[i]){
+                    sum+=serverInfo[w][1];
+                    break;
+                }
+                while(w==serverLevel-1){
+                    puts("adderror3");
+                }
+            }
+        }
+    }
+    long long tmpsum=sum;
+    int mmin=4e7,outPos=0;
+    for(int i=0; i<nodesNum; i++) {
+        if(gens[i]) {
+            if(myOutSum[i]==0) {
+                gens[i]=0;
+            }
+            if(mmin>myOutSum[i]) {
+                mmin=myOutSum[i];
+                outPos=i;
+            }
+        }
+    }
+    if(mmin<500){
+        for(int w=0;w<serverLevel;w++){
+            if(serverInfo[w][0]>=myOutSum[outPos]){
+                tmpsum-=serverInfo[w][1];;
+                tmpsum-=nodesMoney[outPos];
+                break;
+            }
+        }
+        gens[outPos]=0;
+    }
+    mmin=-1;
+    for(int i=0; i<clientNum; i++) {
+        if(!clientsInFirstMap[i])continue;
+        if(mmin<consumptionNodes[i][2]-myInSum[i]) {
+            mmin=consumptionNodes[i][2]-myInSum[i];
+            outPos=i;
+        }
+    }
+
+    if(mmin>0){
+        int nextPos=uniform_iint(0,2);
+        for(int i=nextPos;;){
+            if(classf[outPos][i].size()>0){
+                int another=uniform_iint(0,((int)classf[outPos][i].size())-1);
+                int relPos=classf[outPos][i][another];
+                tmpsum+=serverInfo[serverLevel-1][1];
+                tmpsum+=nodesMoney[relPos];
+                gens[relPos]=1;
+                break;
+            }
+            i++;
+            if(i>=3)i-=3;
+            if(i==nextPos)break;
+        }
+    }
+    delete[] x;
+    delete[] c;
+    mp[relHash] = sum;
+    return make_pair(make_pair((long long)sum,tmpsum),gens);
+}
+
+
 inline void MinCostFlowSolution::LoadDMX( bitset<BITSIZE> &gens) {
 
     int serverNum = gens.count();
@@ -625,7 +827,27 @@ inline void MinCostFlowSolution::LoadDMX( bitset<BITSIZE> &gens) {
         if (gens[j]) {
             arc->wei = nodesP+1-1;
             arc->tou = nodesP+j+2-1;
-            arc->upper = serverInfo[serverLevel-1][0];
+            if(inMustChoose[j]){
+                if(myClient[j]<0){
+                    while(true){
+                        puts("adderror5");
+                    }
+                }
+                for(int w=0;w<serverLevel;w++){
+                    if(serverInfo[w][0]>=consumptionNodes[ myClient[j] ][2]){
+                        arc->upper = serverInfo[w][0];
+                        break;
+                    }
+                    if(w==serverLevel-1){
+                        while(true){
+                            puts("adderror4");
+                        }
+                    }
+                }
+            }
+            else{
+                arc->upper = serverInfo[MAXLEVEL][0];
+            }
             arc->cost = 0;
             arc++;
         }
@@ -658,6 +880,101 @@ inline void MinCostFlowSolution::LoadDMX( bitset<BITSIZE> &gens) {
     assignSelectSpace();
     status = 0;
 }
+
+
+inline void MinCostFlowSolution::LoadDMX2( bitset<BITSIZE> &gens) {
+
+    int serverNum = 0,tlinkNum=0;
+    for(int i=0;i<nodesNum;i++){
+        if(gens[i]&&nodesInFirstMap[i]){
+            serverNum++;
+        }
+    }
+    for(int i=0;i<linkNum;i++){
+        if(nodesInFirstMap[ links[i][0] ] && nodesInFirstMap[ links[i][1] ]){
+            tlinkNum++;
+        }
+    }
+    int tn = nodesNum + clientNum + 1;
+
+    int tm = linkNum*2 + serverNum + clientNum*2;
+
+    deleteSelectSpace();
+    if( n && m )  { //如果原先已经建图，删除内存
+        deleteSpace();
+        n = m = 0;
+    }
+    //申请新的内存
+    n = tn;
+    m = tm;
+    assignSpace();
+    //初始化点数和边数
+    illegalNodeAddress = nodesP + n;
+    humanNode = nodesP + n;
+
+    //初始化需求量
+    nodeInfo *node = nodesP;
+    node->balance= -allNeed;
+    node++;
+    for(int i=1;i<=nodesNum;i++){
+        node->balance=0;
+        node++;
+    }
+    for(int j=nodesNum+2;j<=nodesNum+clientNum+1;j++){
+        if(clientsInFirstMap[j-(nodesNum+2)]){
+            node->balance = consumptionNodes[j-(2+nodesNum)][2];
+        }
+        else{
+            node->balance = 0;
+        }
+        node++;
+    }
+
+    illegalArcAddress = arcAddress + m;
+    humanArc = arcAddress + m;
+    illegalDummyArcAddress = humanArc + n;
+    arcInfo *arc = arcAddress ;
+    /*建图过程*/
+    for (int j = 0; j<nodesNum; j++) {
+        if (gens[j]&&nodesInFirstMap[j]) {
+            arc->wei = nodesP+1-1;
+            arc->tou = nodesP+j+2-1;
+            arc->upper = serverInfo[serverLevel-1][0];
+            arc->cost = 0;
+            arc++;
+        }
+    }
+    for (int j = 0; j < linkNum; j++) {
+        if(nodesInFirstMap[ links[j][0] ] && nodesInFirstMap[ links[j][1] ]){
+            arc->wei = nodesP+links[j][0]+2-1;
+            arc->tou = nodesP+links[j][1]+2-1;
+            arc->upper = links[j][2];
+            arc->cost = links[j][3];
+            arc++;
+            arc->wei = nodesP+links[j][1]+2-1;
+            arc->tou = nodesP+links[j][0]+2-1;
+            arc->upper = links[j][2];
+            arc->cost = links[j][3];
+            arc++;
+        }
+    }
+    for (int j = 0; j < clientNum; j++) {
+        arc->wei = nodesP+consumptionNodes[j][1]+2-1;
+        arc->tou = nodesP+consumptionNodes[j][0] + 2 + nodesNum-1;
+        arc->upper = consumptionNodes[j][2];
+        arc->cost = 0;
+        arc++;
+        arc->wei = nodesP+1-1;
+        arc->tou = nodesP+consumptionNodes[j][0]+2+nodesNum-1;
+        arc->upper = consumptionNodes[j][2];
+        arc->cost = 40000000;
+        arc++;
+    }
+
+    assignSelectSpace();
+    status = 0;
+}
+
 
 template<class T>
 inline T ABS( const T x ) {
@@ -699,30 +1016,7 @@ void MinCostFlowSolution::findOkPath(int num){
       }
   }
 }
-/*
-void MinCostFlowSolution::getNotChoose(set<int>&notChoose){
-    buidShortestMap();
-    memset(mynum,0,sizeof(mynum));
-    for(int i=nodesNum+1; i<=nodesNum+clientNum; i++) {
-        findOkPath(i);
-    }
-    int ave=0;
-    for(int i=0;i<nodesNum;i++){
-        ave+=mynum[i];
-    }
-    ave/=nodesNum;
-    ave/=1.15;
-    for(int i=0;i<nodesNum;i++){
-        //printf("mynum[%d]=%d\n",i,mynum[i]);
-        if(mynum[i]<ave){
-            notChoose.insert(i);
-        }
-    }
-    cout << nodesNum << endl;
-    cout << notChoose.size() <<endl;
-    //exit(0);
-}
-*/
+
 int MinCostFlowSolution::findTheRoad(int pos,int flow){
     if(pos>nodesNum){
         if(imHung[pos]){
@@ -831,8 +1125,8 @@ void MinCostFlowSolution::assignSelectSpace() {
         amountSelectList = 200;
         popularSize = 20 ;
     } else {
-        amountSelectList = 50;
-        popularSize = 10;
+        amountSelectList = 150;
+        popularSize = 4;
     }
     selectAddress = new arcSelect[ popularSize + amountSelectList + 1 ];
 }
@@ -1147,6 +1441,92 @@ inline void MinCostFlowSolution::generateSelect( void ) {
     tempSelectSize = 0;
 }
 
+inline vector<int> MinCostFlowSolution::getLastSolution(bitset<BITSIZE>gens){
+  vector<int>rel;
+  for(int i=0;i<nodesNum;i++){
+      rel.push_back(0);
+  }
+  LoadDMX(gens);
+  int a=clock();
+  solutionMinCostFlow();
+  double b=clock()-a;
+  sumtime+=b/CLOCKS_PER_SEC;
+  times++;
+  double * x = new double[ m ];
+  double * c = new double[ m ];
+  getArcsCost(c);
+  getArcFlow(x);
+  int myflow[BITSIZE];
+  memset(myflow,0,sizeof(myflow));
+  double sum = 0;
+
+  int myOutSum[BITSIZE];
+  int myInSum[BITSIZE];
+  memset(myOutSum,0,sizeof(myOutSum));
+  memset(myInSum,0,sizeof(myInSum));
+  for( int i = 0 ; i < m ; i++ ) {
+      int sst=getArcStartNode(i);
+      int eed=getArcEndNode(i);
+      if(sst>1&&sst<nodesNum+2){
+          myflow[sst-2]+=x[i];
+          if(eed>1&&eed<nodesNum+2){
+              myflow[eed-2]-=x[i];
+          }
+      }
+      if(eed>nodesNum+1) {
+          myInSum[eed-nodesNum-2] += x[i];
+      }
+      if(sst>1&&sst<nodesNum+2&&gens[sst-2]) {
+          myOutSum[sst-2] += x[i];
+      }
+      if (c[i] != 4e7) {
+          sum += c[i] * x[i];
+      }
+      if(getArcStartNode(i)==1 && getArcEndNode(i)>nodesNum+1 && x[i]>0) {
+          if(gens[ myNodes[eed-nodesNum-2] ]){
+              while(true){
+                  puts("adderror1");
+              }
+          }
+          for(int w=0;w<serverLevel;w++){
+              if(serverInfo[w][0]>=x[i]){
+                  sum+=serverInfo[w][1];
+                  sum+=nodesMoney[ myNodes[eed-nodesNum-2] ];
+                  rel[ myNodes[eed-nodesNum-2] ] = w+1;
+                  break;
+              }
+              if(w==serverLevel-1){
+                  while(true){
+                      puts("adderror2");
+                  }
+              }
+          }
+      }
+  }
+
+  for(int i=0;i<nodesNum;i++){
+      while(myflow[i]<0 || myflow[i]>serverInfo[serverLevel-1][0]){
+          puts("aaaflowadderror");
+      }
+      if(gens[i]){
+          sum+=nodesMoney[i];
+          for(int w=0;w<serverLevel;w++){
+              if(serverInfo[w][0]>=myflow[i]){
+                  sum+=serverInfo[w][1];
+                  rel[ i ] = w+1;
+                  break;
+              }
+              while(w==serverLevel-1){
+                  puts("adderror3");
+              }
+          }
+      }
+  }
+  delete[] x;
+  delete[] c;
+  return rel;
+}
+
 inline void MinCostFlowSolution::orderSelect( int min , int max ) {
     int left = min;
     int right = max;
@@ -1191,6 +1571,55 @@ inline N* MinCostFlowSolution::findF( N *n , A *a ) {
         return( a->tou );
     else
         return( a->wei );
+}
+
+inline void MinCostFlowSolution::getDirectNum(){
+    ifstream in1;
+    in1.open("/home/ttbond/桌面/Simplex/第三批练习用例最优解 (2)/1 中级/mcase0.txt");
+    int pos,cla;
+    int rel=0;
+    while(in1>>pos>>cla){
+        for(int i=0;i<clientNum;i++){
+            if(pos==myNodes[i]){
+                rel++;
+                break;
+            }
+        }
+    }
+    printf("DirectNum:%d\n",rel);
+}
+
+inline vector<int> MinCostFlowSolution::getMustChoose(){
+    memset(inMustChoose,0,sizeof(inMustChoose));
+    int allNeed[2000];
+    for(int i=0;i<clientNum;i++){
+        allNeed[i]=consumptionNodes[i][2];
+    }
+    sort(allNeed,allNeed+clientNum,cmpDecrease);
+    int pos=clientNum*0.02;
+    for(int i=0;i<clientNum;i++){
+        if(consumptionNodes[i][2]>=allNeed[pos]){
+            mustChoose.push_back(myNodes[i]);
+            inMustChoose[ myNodes[i] ]=true;
+        }
+    }
+    return mustChoose;
+}
+
+inline vector<int> MinCostFlowSolution::getNotChoose(){
+    int allNeed[2000];
+    for(int i=0;i<clientNum;i++){
+        allNeed[i]=consumptionNodes[i][2];
+    }
+    sort(allNeed,allNeed+clientNum);
+    int pos=clientNum*0.25;
+    for(int i=0;i<clientNum;i++){
+        if(consumptionNodes[i][2]<=allNeed[pos]){
+            notChoose.push_back(myNodes[i]);
+        }
+    }
+    return notChoose;
+
 }
 
 #endif

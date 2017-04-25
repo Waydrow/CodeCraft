@@ -13,6 +13,7 @@ int demond[MAXN],sp[MAXN],Prev[MAXN];
 edge *path[MAXN];
 
 int links[50500][4];
+double nodesP[2000];
 int consumptionNodes[505][3];
 int myNodes[BITSIZE];
 int serverInfo[15][2];
@@ -22,6 +23,27 @@ vector<int> roadCost[BITSIZE];
 vector<int> roadBanw[BITSIZE];
 
 int maxcostflow();
+
+
+void initNodesP() {
+    double myCapacity[2000];
+    memset(myCapacity,0,sizeof(myCapacity));
+    for(int i=0;i<linkNum;i++){
+        myCapacity[ links[i][0] ] += links[i][2];
+        myCapacity[ links[i][1] ] += links[i][2];
+    }
+    double maxP = 0, minP = INF;
+    for(int i=0;i<nodesNum;i++){
+        nodesP[i]= myCapacity[i]/nodesMoney[i];
+        if (nodesP[i] > maxP)
+            maxP = nodesP[i];
+        if (nodesP[i] < minP)
+            minP = nodesP[i];
+    }
+    for(int i=0;i<nodesNum;i++){
+        nodesP[i] = (nodesP[i] - minP) / (maxP - minP);
+    }
+}
 
 
 unsigned long long getHash(int *gene) {
