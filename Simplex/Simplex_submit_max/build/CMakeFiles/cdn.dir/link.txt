@@ -1,1 +1,0 @@
-/usr/bin/c++    -O3 -Wall -std=c++11    CMakeFiles/cdn.dir/cdn.cpp.o CMakeFiles/cdn.dir/deploy.cpp.o CMakeFiles/cdn.dir/io.cpp.o  -o /mnt/hgfs/codecraft/Simplex/Simplex_submit_max/bin/cdn -rdynamic 
